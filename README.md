@@ -5,11 +5,12 @@
 - Currently only supports .png files, but I'll probably expand on that.
 
 ## GUI
-![screenshot](https://github.com/triskj0/steganography-app/blob/main/screenshots/main_menu.png)
-![screenshot](https://github.com/triskj0/steganography-app/blob/main/screenshots/s2.png)
-![screenshot](https://github.com/triskj0/steganography-app/blob/main/screenshots/s3.png)
+<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/main_menu.png" alt="screenshot" width="550"/>
+<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s2.png" alt="screenshot" width="550"/>
+<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s3.png" alt="screenshot" width="550"/>
 
 
 ## detailed app flowchart
 - Helpful for understanding and navigating the code
-![screenshot](https://github.com/triskj0/steganography-app/blob/main/screenshots/flowchart.png)
+
+<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/flowchart.png" alt="flowchart" width="700"/>
