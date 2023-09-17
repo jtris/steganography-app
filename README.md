@@ -10,7 +10,7 @@
 <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s3.png" alt="screenshot" width="550"/>
 
 
-## detailed app flowchart
+## app flowchart
 - Helpful for understanding and navigating the code
 
 <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/flowchart.png" alt="flowchart" width="700"/>
