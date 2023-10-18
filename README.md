@@ -3,6 +3,7 @@
 ## important notes:
 - This app's main purpose wasn't *steganography*, rather than just learning more about the process of creating a desktop application.
 - Currently only supports .png files, but I'll probably expand on that.
+- I'll also convert to using python's built-in `pathlib` to store and manipulate paths.
 
 ## GUI
 <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/main_menu.png" alt="screenshot" width="550"/>
