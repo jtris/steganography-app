@@ -11,7 +11,6 @@ def show_error_msg(message):
 
 
 def home_button_command(master_frame, controller):
-	print('[HOME] button')
 	controller.show_frame('MenuFrame')
 	
 	# delete inputs and error messages
@@ -52,19 +51,16 @@ def button_file_explorer_command(master_frame, controller, current_frame):
 
 # MenuFrame button functions
 def button_encode_command(controller):
-	print('[ENCODE] button')
 	controller.current_process = 'encode'
 	controller.show_frame('ImgPathFrame')
 
 
 def button_decode_command(controller):
-	print('[DECODE] button')
 	controller.current_process = 'decode'
 	controller.show_frame('ImgPathFrame')
 
 
 def button_about_command(controller):
-	print('[ABOUT] button')
 	controller.show_frame('AboutFrame')
 
 
@@ -88,12 +84,10 @@ def button_imgpath_continue_command(master_frame, controller):
 
 
 def img_path_frame_continue_e(controller):
-	print('[CONTINUE] ENCODE OPTION')
 	controller.show_frame('EncodeTextOrFileFrame')
 
 
 def img_path_frame_continue_d(controller):
-	print('[CONTINUE] DECODE OPTION')
 	try:
 		controller.decoded_data = decode_file(controller.original_image_path)
 	except:
@@ -106,12 +100,10 @@ def img_path_frame_continue_d(controller):
 
 # EncodeTextOrFileFrame button functions
 def button_hide_file_command(controller):
-	print('[HIDE FILE] option')
 	controller.show_frame('HideFileFrame')
 
 
 def button_enter_message_command(controller):
-	print('[ENTER MESSAGE] option')
 	controller.show_frame('EnterMessageFrame')
 
 
@@ -180,7 +172,6 @@ def encode_and_save(controller):
 
 	try:
 		encode_file(file_path=original_image_path, data=data, save_path=save_path)
-		print('[SUCCESS] file encoded')
 	except:
 		show_error_msg('an error occured while encoding or saving the file')
 
