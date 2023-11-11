@@ -12,6 +12,8 @@ ENTRY_FONT = ('Fixedsys', 40)
 ERROR_FONT = ('Fixedsys', 30)
 SMALL_FONT = ('Fixedsys', 20)
 
+ABOUT_TEXT = 'Supports JPG and PNG file types.'
+
 
 class Root(tkinter.Tk):
 	def __init__(self, *args, **kwargs): # init App class
@@ -93,7 +95,7 @@ class AboutFrame(tkinter.Frame):
 		self.title2 = customtkinter.CTkLabel(self, text='and this app', font=MEDIUM_FONT)
 		self.title2.place(x=40, y=85)
 
-		self.text = customtkinter.CTkLabel(self, text='currently only supports PNG files', font=ERROR_FONT)
+		self.text = customtkinter.CTkLabel(self, text=ABOUT_TEXT, font=ERROR_FONT)
 		self.text.place(x=40, y=190)
 
 		place_home_button(master=self, controller=controller)
