@@ -1,7 +1,6 @@
 import tkinter
 import customtkinter
 from PIL import Image
-import os
 
 from button_command_functions import *
 

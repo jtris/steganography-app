@@ -1,4 +1,4 @@
-from os import path, remove
+from os import path
 import tkinter
 from tkinter import messagebox
 
