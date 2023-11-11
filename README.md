@@ -22,7 +22,7 @@
 
 ## GUI examples
 <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/main_menu.png" alt="screenshot" width="490"/> <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s2.png" alt="screenshot" width="490"/>
-<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s3.png" alt="screenshot" width="490"/>
+<img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s3.png" alt="screenshot" width="490"/> <img src="https://github.com/triskj0/steganography-app/blob/main/screenshots/s4.png" alt="screenshot" width="490"/>
 
 
 ## App flowchart
