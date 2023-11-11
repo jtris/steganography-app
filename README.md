@@ -6,6 +6,11 @@
 - I plan on making only a few more minor changes.
 <br>
 
+## Used packages (that aren't built-in)
+- [CustomTkinter](https://customtkinter.tomschimansky.com/) 5.2.0+
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 8.2.0+
+<br>
+
 ## Steganography technique
 - For this project I chose to simply hide the given message, or data, in the image's **hex dump**, so there's no pixel/palette processing.
 
