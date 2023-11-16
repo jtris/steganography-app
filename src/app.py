@@ -250,5 +250,5 @@ def place_file_explorer_button(master, controller, current_frame):
 
 
 if __name__ == '__main__':
-	root = Root()	
+	root = Root()
 	root.mainloop()

@@ -47,6 +47,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
 			encode_and_save(controller)
 		else:
 			save_decoded(controller)
+		controller.show_frame('MenuFrame')
 
 
 # MenuFrame button functions
@@ -164,6 +165,8 @@ def button_saveframe_save_command(master_frame, controller):
 	elif controller.current_process == 'decode':
 		save_decoded(controller)
 
+	controller.show_frame('MenuFrame')
+	
 
 def encode_and_save(controller):
 	original_image_path = controller.original_image_path
@@ -172,6 +175,7 @@ def encode_and_save(controller):
 
 	try:
 		encode_file(file_path=original_image_path, data=data, save_path=save_path)
+
 	except:
 		show_error_msg('an error occured while encoding or saving the file')
 
@@ -183,5 +187,6 @@ def save_decoded(controller):
 	try:
 		with open(save_path, 'w') as f:
 			f.write(data)
+
 	except:
 		show_error_msg('an error occured while saving the file')
