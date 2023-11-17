@@ -1,9 +1,9 @@
 # Steganography Desktop App
 
 ## ❗ Important notes:
-- This app's main purpose wasn't *steganography*, rather than just learning more about the process of creating a desktop application.
+- This app's main purpose wasn't originally *steganography*, rather than just learning more about the process of creating a desktop application. The app is built in a way so that it's hopefully easily expansible, in case I wanted to make changes to it in the future.
 - Supports  _jpg_  and  _png_  files.
-- I plan on making only a few more minor changes.
+- I plan on adding more functionalities to this program, mainly the ability to choose the encryption technique.
 <br>
 
 ## Steganography technique
