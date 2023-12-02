@@ -1,6 +1,5 @@
 from os import path
-import tkinter
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 
 from encoding import encode_file
 from decoding import decode_file
@@ -23,7 +22,7 @@ def home_button_command(master_frame, controller):
 
 
 def button_file_explorer_command(master_frame, controller, current_frame):
-	filepath = tkinter.filedialog.askopenfilename(initialdir = "/", title = "Select a file to use: ")
+	filepath = filedialog.askopenfilename(initialdir = "/", title = "Select a file to use: ")
 
 	if not path.isfile(filepath):
 		return
