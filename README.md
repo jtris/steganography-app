@@ -38,7 +38,7 @@ $ echo "this is a secret message" >> image.jpg
 	``` cmd
 	git clone https://github.com/triskj0/steganography-app.git
 
- 	cd steganography-app
+ 	cd steganography-app/src
 	```
 
 2. Install required packages
@@ -48,5 +48,5 @@ $ echo "this is a secret message" >> image.jpg
 
 3. Run
 	``` cmd
-	python3 src/app.py
+	python3 app.py
 	```
