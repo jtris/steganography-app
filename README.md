@@ -15,9 +15,9 @@
 	- This would be the equialent command in a command line to hide a message:
 <br>
 
-	``` cmd
-	$ echo "this is a secret message" >> image.jpg
-	```
+``` cmd
+$ echo "this is a secret message" >> image.jpg
+```
 <br>
 
 ## GUI examples
@@ -35,18 +35,18 @@
 - I'll assume that python is already installed
 		
 1. Clone
-		```
-		git clone https://github.com/triskj0/steganography-app.git
+	``` cmd
+	git clone https://github.com/triskj0/steganography-app.git
 
-		cd steganography-app
-		```
+ 	cd steganography-app
+	```
 
 2. Install required packages
-		```
-		python3 -m pip install -r requirements.txt
-		```
+	``` cmd
+	python3 -m pip install -r requirements.txt
+	```
 
 3. Run
-		```
-		python3 src/app.py
-		```
+	``` cmd
+	python3 src/app.py
+	```
