@@ -142,20 +142,26 @@ class EncodeSelectionFrame(tkinter.Frame):
     def __init__(self, parent, controller):
         tkinter.Frame.__init__(self, parent)
 
+        self.title1 = ctk.CTkLabel(self, text='choose how you would', font=MEDIUM_FONT)
+        self.title1.place(x=20, y=25)
+
+        self.title2 = ctk.CTkLabel(self, text='like to hide the data', font=MEDIUM_FONT)
+        self.title2.place(x=20, y=85)
+
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_appending_command(controller),
-            text='appending', font=MEDIUM_FONT, width=450, height=80)
-        self.button_appending.place(x=(W_WIDTH-450)//2, y=120)
+            text='append', font=ERROR_FONT, width=350, height=80)
+        self.button_appending.place(x=30, y=190)
 
-        self.button_2 = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
-            text='', font=MEDIUM_FONT, width=450, height=80)
-        self.button_2.place(x=(W_WIDTH-450)//2, y=(W_HEIGHT-80)//2)
+        self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_encode_selection_metadata_command(controller),
+            text='hide in metadata', font=ERROR_FONT, width=350, height=80)
+        self.button_metadata.place(x=30, y=275)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
             command=None,
-            text='', font=MEDIUM_FONT, width=450, height=80)
-        self.button_3.place(x=(W_WIDTH-450)//2, y=(W_HEIGHT-80)//2+90)
+            text='', font=ERROR_FONT, width=350, height=80)
+        self.button_3.place(x=30, y=360)
 
         place_home_button(self, controller)
 
@@ -164,22 +170,28 @@ class DecodeSelectionFrame(tkinter.Frame):
     def __init__(self, parent, controller):
         tkinter.Frame.__init__(self, parent)
 
-        place_home_button(self, controller)
+        self.title1 = ctk.CTkLabel(self, text='choose how the data', font=MEDIUM_FONT)
+        self.title1.place(x=20, y=25)
+
+        self.title2 = ctk.CTkLabel(self, text='was hidden', font=MEDIUM_FONT)
+        self.title2.place(x=20, y=85)
 
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_appending_command(controller),
-            text='appending', font=MEDIUM_FONT, width=450, height=80)
-        self.button_appending.place(x=(W_WIDTH-450)//2, y=120)
+            text='appended', font=ERROR_FONT, width=350, height=80)
+        self.button_appending.place(x=30, y=190)
 
-        self.button_2 = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
-            text='', font=MEDIUM_FONT, width=450, height=80)
-        self.button_2.place(x=(W_WIDTH-450)//2, y=(W_HEIGHT-80)//2)
+        self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_decode_selection_metadata_command(controller),
+            text='hidden in metadata', font=ERROR_FONT, width=350, height=80)
+        self.button_metadata.place(x=30, y=275)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
             command=None,
-            text='', font=MEDIUM_FONT, width=450, height=80)
-        self.button_3.place(x=(W_WIDTH-450)//2, y=(W_HEIGHT-80)//2+90)
+            text='', font=ERROR_FONT, width=350, height=80)
+        self.button_3.place(x=30, y=360)
+
+        place_home_button(self, controller)
 
 
 class EncodeTextOrFileFrame(tkinter.Frame):

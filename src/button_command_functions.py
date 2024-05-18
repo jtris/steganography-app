@@ -1,8 +1,8 @@
 from os import path
 from tkinter import filedialog, messagebox
 
-from encoding import encode_file_by_appending
-from decoding import decode_file_appending
+from encoding import *
+from decoding import *
 
 
 def show_error_msg(message):
@@ -102,9 +102,24 @@ def button_decode_selection_appending_command(controller):
     controller.show_frame('PrintoutFrame')
 
 
+def button_decode_selection_metadata_command(controller):
+    try:
+        controller.decoded_data = decode_file_metadata(controller.original_image_path)
+    except:
+        show_error_msg('an error occured while decoding the file metadata')
+
+    controller.frames['PrintoutFrame'].message_textbox.insert('insert', controller.decoded_data)
+    controller.show_frame('PrintoutFrame')
+
+
 # EncodeSelectionFrame button functions
 def button_encode_selection_appending_command(controller):
     controller.encoding_technique = 'appending'
+    controller.show_frame('EncodeTextOrFileFrame')
+
+
+def button_encode_selection_metadata_command(controller):
+    controller.encoding_technique = 'metadata'
     controller.show_frame('EncodeTextOrFileFrame')
 
 
@@ -183,8 +198,11 @@ def encode_and_save(controller):
     data = controller.data_to_hide
 
     try:
-        if (controller.encoding_technique == 'appending'):
+        if controller.encoding_technique == 'appending':
             encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
+    
+        elif controller.encoding_technique == 'metadata':
+            encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
 
     except:
         show_error_msg('an error occured while encoding or saving the file')
