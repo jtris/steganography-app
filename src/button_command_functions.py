@@ -92,23 +92,41 @@ def img_path_frame_continue_d(controller):
 
 
 # DecodeSelectionFrame button functions
-def button_decode_selection_appending_command(controller):
+def button_decode_selection_command(controller):
     try:
-        controller.decoded_data = decode_file_appending(controller.original_image_path)
+        if controller.encoding_technique == 'appending':
+            controller.decoded_data = decode_file_appending(controller.original_image_path)
+
+        elif controller.encoding_technique == 'metadata':
+            controller.decoded_data = decode_file_metadata(controller.original_image_path)
+
+        elif controller.encoding_technique == 'lsb':
+            controller.decoded_data = decode_file_lsb(controller.original_image_path)
+        
     except:
         show_error_msg('an error occured while decoding the file')
 
-    controller.frames['PrintoutFrame'].message_textbox.insert('insert', controller.decoded_data)
-    controller.show_frame('PrintoutFrame')
+    _button_decode_selection_continuation(controller)
+
+
+def button_decode_selection_appending_command(controller):
+    controller.encoding_technique = 'appending'
+    button_decode_selection_command(controller)
 
 
 def button_decode_selection_metadata_command(controller):
-    try:
-        controller.decoded_data = decode_file_metadata(controller.original_image_path)
-    except:
-        show_error_msg('an error occured while decoding the file metadata')
+    controller.encoding_technique = 'metadata'
+    button_decode_selection_command(controller)
 
-    controller.frames['PrintoutFrame'].message_textbox.insert('insert', controller.decoded_data)
+
+def button_decode_selection_lsb_command(controller):
+    controller.encoding_technique = 'lsb'
+    button_decode_selection_command(controller)
+
+
+def _button_decode_selection_continuation(controller):
+    controller.frames['PrintoutFrame'].message_textbox.delete('0.0', 'end')
+    controller.frames['PrintoutFrame'].message_textbox.insert('insert', str(controller.decoded_data))
     controller.show_frame('PrintoutFrame')
 
 
@@ -120,6 +138,11 @@ def button_encode_selection_appending_command(controller):
 
 def button_encode_selection_metadata_command(controller):
     controller.encoding_technique = 'metadata'
+    controller.show_frame('EncodeTextOrFileFrame')
+
+
+def button_encode_selection_lsb_command(controller):
+    controller.encoding_technique = 'lsb'
     controller.show_frame('EncodeTextOrFileFrame')
 
 
@@ -200,9 +223,12 @@ def encode_and_save(controller):
     try:
         if controller.encoding_technique == 'appending':
             encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
-    
+        
         elif controller.encoding_technique == 'metadata':
             encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
+
+        elif controller.encoding_technique == 'lsb':
+            encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path)
 
     except:
         show_error_msg('an error occured while encoding or saving the file')

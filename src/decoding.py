@@ -1,4 +1,5 @@
 from PIL import Image
+import numpy as np
 import piexif
 
 
@@ -23,5 +24,27 @@ def decode_file_appending(image_path: str):
 def decode_file_metadata(image_path: str):
     image = Image.open(image_path)
     contents = piexif.load(image.info['exif'])['0th'][piexif.ImageIFD.ImageDescription].decode('utf-8')
+    return contents
+
+
+def decode_file_lsb(image_path: str):
+
+    with Image.open(image_path) as image:
+        image_width, image_height = image.size
+        image_numpy_array = np.array(image)
+
+    image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*3)
+    image_numpy_array = image_numpy_array & 1
+    image_numpy_array = np.packbits(image_numpy_array)
+
+    contents = ''
+
+    for x in image_numpy_array:
+        if chr(x) == '\r':
+            break;
+
+        if chr(x).isprintable():
+            contents += chr(x)
+
     return contents
 

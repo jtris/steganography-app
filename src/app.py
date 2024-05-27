@@ -159,8 +159,8 @@ class EncodeSelectionFrame(tkinter.Frame):
         self.button_metadata.place(x=30, y=275)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
-            text='', font=ERROR_FONT, width=350, height=80)
+            command=lambda:button_encode_selection_lsb_command(controller),
+            text='LSB', font=ERROR_FONT, width=350, height=80)
         self.button_3.place(x=30, y=360)
 
         place_home_button(self, controller)
@@ -187,8 +187,8 @@ class DecodeSelectionFrame(tkinter.Frame):
         self.button_metadata.place(x=30, y=275)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
-            text='', font=ERROR_FONT, width=350, height=80)
+            command=lambda:button_decode_selection_lsb_command(controller),
+            text='LSB', font=ERROR_FONT, width=350, height=80)
         self.button_3.place(x=30, y=360)
 
         place_home_button(self, controller)
