@@ -1,6 +1,8 @@
 from PIL import Image
 import numpy as np
+import jpeglib
 import piexif
+import random
 import os
 
 
@@ -12,7 +14,7 @@ def encode_file_by_appending(file_path: str, data: bytes, save_path: str) -> str
         os.remove(save_path)
 
     with open(save_path, 'ab') as f:
-        f.write((image_contents+data).encode('utf-8'))
+        f.write((image_contents+data))
 
 
 def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: str) -> str:
@@ -30,12 +32,38 @@ def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: st
 
 
 def encode_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+    if save_path[-3:] == 'png':
+        encode_png_file_by_lsb(file_path, data, save_path)
+        return
+    encode_jpg_file_by_lsb(file_path, data, save_path)
 
-    data += b' \r' # include a non-printable char to indicate end of data when decoding
+
+def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+    img = jpeglib.read_dct(file_path)
+    
+    data_bytes = []
+    for character in data:
+        data_bytes += [(character >> i) & 1 for i in range(8)]
+
+    coefficient = img.Y[::8, ::8]
+    original_shape = coefficient.shape
+    coefficient = coefficient.flatten()
+    coefficient_copy = coefficient.copy()
+
+    for i in range(len(data_bytes)):
+        if coefficient[i] % 2 != data_bytes[i]:
+            coefficient_copy[i] = coefficient[i] + random.choice([-1, +1])
+
+    img.Y[::8, ::8] = coefficient_copy.reshape(original_shape)
+    img.write_dct(save_path)
+
+
+def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+    
+    data += b' \r\r\r\r\r' # include a non-printable char to indicate end of data when decoding
 
     # encode data as a series of 8 bit values
     data_bytes = ''.join(["{:08b}".format(x) for x in data])
-    data_bytes = [int(x) for x in data_bytes]
 
     with Image.open(file_path) as image:
         image_width, image_height = image.size
@@ -43,8 +71,18 @@ def encode_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
 
     # flatten pixel arrays
     image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*3)
-    
-    image_numpy_array[:len(data_bytes)] = image_numpy_array[:len(data_bytes)] & ~1 | data_bytes
+
+    # encode data
+    for x in range(len(data_bytes)):
+        binary_value = "{:08b}".format(image_numpy_array[x])
+
+        binary_value = list(binary_value)
+        binary_value[-1] = data_bytes[x]
+        binary_value = ''.join(binary_value)
+
+        image_numpy_array[x] = int(binary_value)
+
+    # resize to original dimensions
     image_numpy_array = np.reshape(image_numpy_array, (image_height, image_width, 3))
 
     Image.fromarray(image_numpy_array).save(save_path)

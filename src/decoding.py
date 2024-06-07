@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import jpeglib
 import piexif
 
 
@@ -26,8 +27,34 @@ def decode_file_metadata(image_path: str):
     contents = piexif.load(image.info['exif'])['0th'][piexif.ImageIFD.ImageDescription].decode('utf-8')
     return contents
 
-
 def decode_file_lsb(image_path: str):
+    if image_path[-3:] == 'png':
+        return decode_png_file_lsb(image_path)
+
+    return decode_jpg_file_lsb(image_path)
+
+
+def decode_jpg_file_lsb(image_path: str):
+    img = jpeglib.read_dct(image_path)
+    coefficient = img.Y[::8, ::8].flatten()
+
+    message_bytes = [int(byte)%2 for byte in coefficient]
+
+    contents = []
+    byte_value = 0
+
+    for i in range(len(message_bytes)):
+        if i % 8 == 0 and i != 0:
+            contents.append(byte_value)
+            byte_value = 0
+
+        byte_value |= message_bytes[i] << i % 8
+
+    contents = ''.join([chr(c) for c in contents])[:200]
+    return contents
+
+
+def decode_png_file_lsb(image_path: str):
 
     with Image.open(image_path) as image:
         image_width, image_height = image.size
@@ -41,7 +68,7 @@ def decode_file_lsb(image_path: str):
 
     for x in image_numpy_array:
         if chr(x) == '\r':
-            break;
+            break
 
         if chr(x).isprintable():
             contents += chr(x)

@@ -220,18 +220,17 @@ def encode_and_save(controller):
     save_path = controller.save_path
     data = controller.data_to_hide
 
-    try:
-        if controller.encoding_technique == 'appending':
-            encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
-        
-        elif controller.encoding_technique == 'metadata':
-            encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
+    if controller.encoding_technique == 'appending':
+        encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
+   
+    elif controller.encoding_technique == 'metadata':
+        encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
 
-        elif controller.encoding_technique == 'lsb':
-            encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path)
+    elif controller.encoding_technique == 'lsb':
+        encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path)
 
-    except:
-        show_error_msg('an error occured while encoding or saving the file')
+    #except:
+    #    show_error_msg('an error occured while encoding or saving the file')
 
 
 def save_decoded(controller):
