@@ -38,10 +38,19 @@ def encode_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
     encode_jpg_file_by_lsb(file_path, data, save_path)
 
 
+def add_character_sequence_to_lsb_data(data: bytes) -> bytes:
+    # add special characters to indicate the end of the message when decoding
+    data += 10 * b'`'
+    return data
+
+
 def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+
     img = jpeglib.read_dct(file_path)
     
     data_bytes = []
+    data = add_character_sequence_to_lsb_data(data)
+
     for character in data:
         data_bytes += [(character >> i) & 1 for i in range(8)]
 
@@ -60,7 +69,7 @@ def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
 
 def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
     
-    data += b' \r\r\r\r\r' # include a non-printable char to indicate end of data when decoding
+    data = add_character_sequence_to_lsb_data(data)
 
     # encode data as a series of 8 bit values
     data_bytes = ''.join(["{:08b}".format(x) for x in data])

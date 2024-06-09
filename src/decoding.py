@@ -27,6 +27,16 @@ def decode_file_metadata(image_path: str):
     contents = piexif.load(image.info['exif'])['0th'][piexif.ImageIFD.ImageDescription].decode('utf-8')
     return contents
 
+
+def filter_message(data: str) -> str:
+    # finds end of message indicated by a sequence of special characters
+    try:
+        return data[:data.index(10*'`')]
+
+    except ValueError:
+        return data
+
+
 def decode_file_lsb(image_path: str):
     if image_path[-3:] == 'png':
         return decode_png_file_lsb(image_path)
@@ -50,8 +60,8 @@ def decode_jpg_file_lsb(image_path: str):
 
         byte_value |= message_bytes[i] << i % 8
 
-    contents = ''.join([chr(c) for c in contents])[:200]
-    return contents
+    contents = ''.join([chr(c) for c in contents])
+    return filter_message(contents)
 
 
 def decode_png_file_lsb(image_path: str):
@@ -67,11 +77,9 @@ def decode_png_file_lsb(image_path: str):
     contents = ''
 
     for x in image_numpy_array:
-        if chr(x) == '\r':
-            break
 
         if chr(x).isprintable():
             contents += chr(x)
 
-    return contents
+    return filter_message(contents)
 
