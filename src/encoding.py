@@ -1,3 +1,5 @@
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 from PIL import Image
 import numpy as np
 import jpeglib
@@ -6,7 +8,7 @@ import random
 import os
 
 
-def encode_file_by_appending(file_path: str, data: bytes, save_path: str) -> str:
+def encode_file_by_appending(file_path: str, data: bytes, save_path: str):
     with open(file_path, 'rb') as f:
         image_contents = f.read()
 
@@ -17,7 +19,7 @@ def encode_file_by_appending(file_path: str, data: bytes, save_path: str) -> str
         f.write((image_contents+data))
 
 
-def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: str) -> str:
+def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: str):
     image = Image.open(file_path)
 
     if 'exif' in image.info:
@@ -31,7 +33,7 @@ def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: st
     image.save(save_path, exif=exif_bytes)
 
 
-def encode_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+def encode_file_by_lsb(file_path: str, data: bytes, save_path: str):
     if save_path[-3:] == 'png':
         encode_png_file_by_lsb(file_path, data, save_path)
         return
@@ -44,7 +46,7 @@ def add_character_sequence_to_lsb_data(data: bytes) -> bytes:
     return data
 
 
-def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str):
 
     img = jpeglib.read_dct(file_path)
     
@@ -67,7 +69,7 @@ def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
     img.write_dct(save_path)
 
 
-def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
+def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
     
     data = add_character_sequence_to_lsb_data(data)
 
@@ -87,12 +89,8 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
 
         binary_value = list(binary_value)
 
-        # change the least significant bit (using lsb matching)
-        if binary_value[-1] != data_bytes[x]:
-            changing_bit = int(binary_value[-1])
-            changing_bit += random.choice([-1, +1])
-            binary_value[-1] = str(changing_bit)
-
+        # change the least significant bit (using lsb replacement)
+        binary_value[-1] = data_bytes[x]
         binary_value = ''.join(binary_value)
         image_numpy_array[x] = int(binary_value)
 
@@ -101,3 +99,19 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str) -> str:
 
     Image.fromarray(image_numpy_array).save(save_path)
 
+
+def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str):
+    
+    # encrypt data with AES
+    key = get_random_bytes(16)
+    aes_cipher = AES.new(key, AES.MODE_EAX)
+
+    encrypted_data, tag = aes_cipher.encrypt_and_digest(data)
+    nonce = aes_cipher.nonce
+
+    # put all information necessary for decrypting together as binary
+    payload = key + nonce + tag + encrypted_data
+    payload = ''.join(["{:08b}".format(x) for x in payload])
+
+    transformed_data = bytes(payload, encoding='utf-8')
+    encode_file_by_lsb(file_path, transformed_data, save_path)

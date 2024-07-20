@@ -151,17 +151,22 @@ class EncodeSelectionFrame(tkinter.Frame):
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_appending_command(controller),
             text='append', font=ERROR_FONT, width=350, height=80)
-        self.button_appending.place(x=30, y=190)
+        self.button_appending.place(x=40, y=175)
 
         self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_metadata_command(controller),
             text='hide in metadata', font=ERROR_FONT, width=350, height=80)
-        self.button_metadata.place(x=30, y=275)
+        self.button_metadata.place(x=40, y=265)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_lsb_command(controller),
             text='LSB', font=ERROR_FONT, width=350, height=80)
-        self.button_3.place(x=30, y=360)
+        self.button_3.place(x=40, y=355)
+
+        self.button_4 = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_encode_file_by_aes_lsb(controller),
+            text='AES + LSB', font=ERROR_FONT, width=350, height=80)
+        self.button_4.place(x=400, y=175)
 
         place_home_button(self, controller)
 
@@ -179,17 +184,22 @@ class DecodeSelectionFrame(tkinter.Frame):
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_appending_command(controller),
             text='appended', font=ERROR_FONT, width=350, height=80)
-        self.button_appending.place(x=30, y=190)
+        self.button_appending.place(x=40, y=175)
 
         self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_metadata_command(controller),
             text='hidden in metadata', font=ERROR_FONT, width=350, height=80)
-        self.button_metadata.place(x=30, y=275)
+        self.button_metadata.place(x=40, y=265)
 
         self.button_3 = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_lsb_command(controller),
             text='LSB', font=ERROR_FONT, width=350, height=80)
-        self.button_3.place(x=30, y=360)
+        self.button_3.place(x=40, y=355)
+
+        self.button_4 = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_decode_selection_aes_lsb_command(controller),
+            text='AES + LSB', font=ERROR_FONT, width=350, height=80)
+        self.button_4.place(x=400, y=175)
 
         place_home_button(self, controller)
 
