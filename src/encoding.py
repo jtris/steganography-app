@@ -87,12 +87,9 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
     for x in range(len(data_bytes)):
         binary_value = "{:08b}".format(image_numpy_array[x])
 
-        binary_value = list(binary_value)
-
-        # change the least significant bit (using lsb replacement)
-        binary_value[-1] = data_bytes[x]
-        binary_value = ''.join(binary_value)
-        image_numpy_array[x] = int(binary_value)
+        # change the least significant bit (using lsb matching)
+        if (binary_value[-1] != data_bytes[x]):
+            image_numpy_array[x] = int(binary_value, 2) + random.choice([+1, -1])
 
     # resize to original dimensions
     image_numpy_array = np.reshape(image_numpy_array, (image_height, image_width, 3))
