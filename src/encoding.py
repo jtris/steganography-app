@@ -8,6 +8,8 @@ import random
 import os
 
 
+''' appending '''
+
 def encode_file_by_appending(file_path: str, data: bytes, save_path: str):
     with open(file_path, 'rb') as f:
         image_contents = f.read()
@@ -18,6 +20,8 @@ def encode_file_by_appending(file_path: str, data: bytes, save_path: str):
     with open(save_path, 'ab') as f:
         f.write((image_contents+data))
 
+
+''' metadata '''
 
 def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: str):
     image = Image.open(file_path)
@@ -32,6 +36,8 @@ def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: st
 
     image.save(save_path, exif=exif_bytes)
 
+
+''' lsb matching '''
 
 def encode_file_by_lsb(file_path: str, data: bytes, save_path: str):
     if save_path[-3:] == 'png':
@@ -96,6 +102,8 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
 
     Image.fromarray(image_numpy_array).save(save_path)
 
+
+''' aes + lsb matching '''
 
 def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str):
     

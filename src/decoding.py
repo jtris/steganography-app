@@ -6,6 +6,8 @@ import jpeglib
 import piexif
 
 
+''' appending '''
+
 def decode_file_appending(image_path: str):
     
     if 'png' in image_path[-4:]:
@@ -24,11 +26,15 @@ def decode_file_appending(image_path: str):
     return contents[text_start_index:-1]
 
 
+''' metadata'''
+
 def decode_file_metadata(image_path: str):
     image = Image.open(image_path)
     contents = piexif.load(image.info['exif'])['0th'][piexif.ImageIFD.ImageDescription].decode('utf-8')
     return contents
 
+
+''' lsb matching'''
 
 def filter_message(data: str) -> str:
     # finds end of message indicated by a sequence of special characters
@@ -85,6 +91,8 @@ def decode_png_file_lsb(image_path: str):
 
     return filter_message(contents)
 
+
+''' aes + lsb matching '''
 
 def _get_16_bit_value_from_encrypted_message(data_index, encrypted_message):
     values_list = []
