@@ -28,6 +28,7 @@ class Root(ctk.CTk):
         self.decoded_data = None
         self.data_to_hide = None
         self.save_path = None
+        self.decryption_key_path = None
 
         # window parameters
         self.geometry(f'{W_WIDTH}x{W_HEIGHT}')
@@ -48,7 +49,7 @@ class Root(ctk.CTk):
 
         frames_ = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
                     HideFileFrame, EnterMessageFrame, SaveFrame, PrintoutFrame,
-                    EncodeSelectionFrame, DecodeSelectionFrame]
+                    EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame]
         
         self.frames = {}
         for frame_class in frames_:
@@ -207,7 +208,7 @@ class DecodeSelectionFrame(tkinter.Frame):
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
+            command=button_decode_selection_rsa_aes_lsb_command(controller),
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
@@ -316,6 +317,32 @@ class PrintoutFrame(tkinter.Frame):
         self.message_textbox = ctk.CTkTextbox(self, width=630, height=440, corner_radius=15,
             fg_color='transparent', font=SMALL_FONT, border_color='dark grey', border_width=2)
         self.message_textbox.place(x=30, y=30)
+
+
+class EnterKeyFrame(tkinter.Frame):
+    def __init__(self, parent, controller):
+        tkinter.Frame.__init__(self, parent)
+
+        place_home_button(self, controller)
+
+        self.title1 = ctk.CTkLabel(self, text='choose or enter', font=MEDIUM_FONT)
+        self.title1.place(x=20, y=25)
+
+        self.title2 = ctk.CTkLabel(self, text='the key path (.json)', font=MEDIUM_FONT)
+        self.title2.place(x=20, y=85)
+
+        self.error_label = ctk.CTkLabel(self, text='enter a valid path',
+            text_color='red', font=ERROR_FONT, fg_color='transparent')
+
+        self.entry = ctk.CTkEntry(self, font=ENTRY_FONT,
+            width=600, height=100, corner_radius=15)
+        self.entry.place(x=30, y=170)
+
+        place_file_explorer_button(master=self, controller=controller, current_frame='EnterKeyFrame')
+
+        self.button_save = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_enterkeyframe_continue_command(self, controller), text='continue', font=MEDIUM_FONT, width=450, height=80)
+        self.button_save.place(x=30, y=390)
 
 
 # OTHER FNs

@@ -105,6 +105,9 @@ def button_decode_selection_command(controller):
 
         elif controller.encoding_technique == 'aes+lsb':
             controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
+
+        elif controller.encoding_technique == 'rsa+aes+lsb':
+            controller.show_frame('EnterKeyFrame')
         
     except:
        show_error_msg('an error occured while decoding the file')
@@ -129,6 +132,11 @@ def button_decode_selection_lsb_command(controller):
 
 def button_decode_selection_aes_lsb_command(controller):
     controller.encoding_technique = 'aes+lsb'
+    button_decode_selection_command(controller)
+
+
+def button_decode_selection_rsa_aes_lsb_command(controller):
+    controller.encoding_technique = 'rsa+aes+lsb'
     button_decode_selection_command(controller)
 
 
@@ -260,3 +268,34 @@ def save_decoded(controller):
 
     except:
         show_error_msg('an error occured while saving the file')
+
+
+# EnterKeyFrame
+
+def _decode_rsa_aes_lsb(key_path):
+    # parse the json file
+    # assemble the key
+    # decrypt
+    return ''
+
+
+def button_enterkeyframe_continue_command(master_frame, controller):
+
+    entry_input = master_frame.entry.get().strip()
+    master_frame.entry.delete(0, 'end')
+
+    try:
+        with open(entry_input, 'r') as f:
+            pass
+    except:
+        master_frame.error_label.place(x=35, y=280)
+        return
+
+    # if entry_input[-5:] != '.json':
+    #     master_frame.error_label.place(x=35, y=280)
+    #     return
+
+    controller.decoded_data = _decode_rsa_aes_lsb(entry_input)
+    master_frame.error_label.place_forget()
+    
+    controller.show_frame('PrintoutFrame')
