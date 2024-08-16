@@ -208,7 +208,7 @@ class DecodeSelectionFrame(tkinter.Frame):
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=button_decode_selection_rsa_aes_lsb_command(controller),
+            command=lambda:button_decode_selection_rsa_aes_lsb_command(controller),
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
