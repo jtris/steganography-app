@@ -107,8 +107,8 @@ def button_decode_selection_command(controller):
             controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
 
         elif controller.encoding_technique == 'rsa+aes+lsb':
-            controller.show_frame('EnterKeyFrame')
-        
+            controller.decoded_data = 'TEMP'
+
     except:
        show_error_msg('an error occured while decoding the file')
 
@@ -136,8 +136,7 @@ def button_decode_selection_aes_lsb_command(controller):
 
 
 def button_decode_selection_rsa_aes_lsb_command(controller):
-    controller.encoding_technique = 'rsa+aes+lsb'
-    button_decode_selection_command(controller)
+    controller.show_frame('EnterKeyFrame')
 
 
 def _button_decode_selection_continuation(controller):
@@ -162,8 +161,13 @@ def button_encode_selection_lsb_command(controller):
     controller.show_frame('EncodeTextOrFileFrame')
 
 
-def button_encode_file_by_aes_lsb(controller):
+def button_encode_selection_aes_lsb_command(controller):
     controller.encoding_technique = 'aes+lsb'
+    controller.show_frame('EncodeTextOrFileFrame')
+
+
+def button_encode_selection_rsa_aes_lsb_command(controller):
+    controller.encoding_technique = 'rsa+aes+lsb'
     controller.show_frame('EncodeTextOrFileFrame')
 
 
@@ -281,6 +285,10 @@ def _decode_rsa_aes_lsb(key_path):
 
 def button_enterkeyframe_continue_command(master_frame, controller):
 
+    controller.encoding_technique = 'rsa+aes+lsb'
+    button_decode_selection_command(controller)
+
+    '''
     entry_input = master_frame.entry.get().strip()
     master_frame.entry.delete(0, 'end')
 
@@ -299,3 +307,4 @@ def button_enterkeyframe_continue_command(master_frame, controller):
     master_frame.error_label.place_forget()
     
     controller.show_frame('PrintoutFrame')
+    '''

@@ -165,7 +165,7 @@ class EncodeSelectionFrame(tkinter.Frame):
         self.button_lsb.place(x=40, y=355)
 
         self.button_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_file_by_aes_lsb(controller),
+            command=lambda:button_encode_selection_aes_lsb_command(controller),
             text='AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_aes_lsb.place(x=400, y=175)
 
