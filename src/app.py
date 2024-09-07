@@ -170,7 +170,7 @@ class EncodeSelectionFrame(tkinter.Frame):
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
+            command=lambda:button_encode_selection_rsa_aes_lsb_command(controller),
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
@@ -300,7 +300,8 @@ class SaveFrame(tkinter.Frame):
         place_file_explorer_button(master=self, controller=controller, current_frame='SaveFrame')
 
         self.button_save = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_saveframe_save_command(self, controller), text='save', font=MEDIUM_FONT, width=450, height=80)
+            command=lambda:button_saveframe_save_command(self, controller),
+            text='save', font=MEDIUM_FONT, width=450, height=80)
         self.button_save.place(x=30, y=390)
 
 

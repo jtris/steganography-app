@@ -1,5 +1,6 @@
-from Crypto.Cipher import AES
+from Crypto.Cipher import AES, PKCS1_v1_5
 from Crypto.Random import get_random_bytes
+from Crypto.PublicKey import RSA
 from PIL import Image
 import numpy as np
 import jpeglib
@@ -120,3 +121,34 @@ def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str):
 
     transformed_data = bytes(payload, encoding='utf-8')
     encode_file_by_lsb(file_path, transformed_data, save_path)
+
+
+''' rsa + aes + lsb matching '''
+
+def _get_save_path_directory(save_path):
+    last_slash = save_path.rfind('/')
+    return save_path[:last_slash+1]
+
+
+def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
+
+    # encrypt data with AES
+    aes_key = get_random_bytes(16)
+    aes_cipher = AES.new(aes_key, AES.MODE_EAX)
+
+    aes_encrypted_data, tag = aes_cipher.encrypt_and_digest(data)
+    nonce = aes_cipher.nonce
+
+    rsa_payload = aes_key + nonce + tag
+    rsa_key = RSA.generate(1024)
+    rsa_cipher = PKCS1_v1_5.new(rsa_key)
+    rsa_ciphertext = rsa_cipher.encrypt(rsa_payload) # always ends up being 128 bytes long
+
+    # save the key
+    key_save_path = _get_save_path_directory(save_path) + 'rsa_key.pem'
+    with open(key_save_path, 'w') as f:
+        f.write(str(rsa_key.exportKey('PEM')))
+
+    # encode with lsb
+    lsb_payload = rsa_ciphertext + aes_encrypted_data
+    encode_file_by_lsb(file_path, lsb_payload, save_path)

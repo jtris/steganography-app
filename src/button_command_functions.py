@@ -257,7 +257,10 @@ def encode_and_save(controller):
 
         elif controller.encoding_technique == 'aes+lsb':
             encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path)
-
+        
+        elif controller.encoding_technique == 'rsa+aes+lsb':
+            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, save_path=save_path)
+    
     except:
        show_error_msg('an error occured while encoding or saving the file')
 
