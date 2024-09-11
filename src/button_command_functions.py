@@ -48,6 +48,9 @@ def button_file_explorer_command(master_frame, controller, current_frame):
             save_decoded(controller)
         controller.show_frame('MenuFrame')
 
+    elif current_frame == 'EnterKeyFrame':
+        controller.rsa_key_path = filepath
+        button_enterkeyframe_continue_command(master_frame, controller)
 
 # MenuFrame button functions
 def button_encode_command(controller):
@@ -93,21 +96,22 @@ def img_path_frame_continue_d(controller):
 
 # DecodeSelectionFrame button functions
 def button_decode_selection_command(controller):
+
     try:
         if controller.encoding_technique == 'appending':
                controller.decoded_data = decode_file_appending(controller.original_image_path)
-
+     
         elif controller.encoding_technique == 'metadata':
             controller.decoded_data = decode_file_metadata(controller.original_image_path)
-
+     
         elif controller.encoding_technique == 'lsb':
             controller.decoded_data = decode_file_lsb(controller.original_image_path)
-
+     
         elif controller.encoding_technique == 'aes+lsb':
             controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
-
+     
         elif controller.encoding_technique == 'rsa+aes+lsb':
-            controller.decoded_data = 'TEMP'
+            controller.decoded_data = decode_file_rsa_aes_lsb(controller.original_image_path, controller.rsa_key_path)
 
     except:
        show_error_msg('an error occured while decoding the file')
@@ -136,6 +140,7 @@ def button_decode_selection_aes_lsb_command(controller):
 
 
 def button_decode_selection_rsa_aes_lsb_command(controller):
+    controller.encoding_technique = 'rsa+aes+lsb'
     controller.show_frame('EnterKeyFrame')
 
 
@@ -279,19 +284,32 @@ def save_decoded(controller):
 
 # EnterKeyFrame
 
-def _decode_rsa_aes_lsb(key_path):
-    # parse the json file
-    # assemble the key
-    # decrypt
-    return ''
-
-
 def button_enterkeyframe_continue_command(master_frame, controller):
 
-    controller.encoding_technique = 'rsa+aes+lsb'
+    if controller.rsa_key_path is None:
+        entry_input = master_frame.entry.get().strip()
+        master_frame.entry.delete(0, 'end')
+
+        try:
+            with open(entry_input, 'r') as f:
+                pass
+        except:
+            master_frame.error_label.place(x=35, y=280)
+            return
+        
+        if entry_input[-4:] != '.pem':
+            master_frame.error_label.place(x=35, y=280)
+            return
+        
+        controller.rsa_key_path = entry_input
+    
+    master_frame.error_label.place_forget()
     button_decode_selection_command(controller)
 
     '''
+    controller.encoding_technique = 'rsa+aes+lsb'
+    _button_decode_selection_continuation(controller)
+
     entry_input = master_frame.entry.get().strip()
     master_frame.entry.delete(0, 'end')
 
@@ -302,9 +320,9 @@ def button_enterkeyframe_continue_command(master_frame, controller):
         master_frame.error_label.place(x=35, y=280)
         return
 
-    # if entry_input[-5:] != '.json':
-    #     master_frame.error_label.place(x=35, y=280)
-    #     return
+    if entry_input[-4:] != '.pem':
+        master_frame.error_label.place(x=35, y=280)
+        return
 
     controller.decoded_data = _decode_rsa_aes_lsb(entry_input)
     master_frame.error_label.place_forget()

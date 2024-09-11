@@ -169,3 +169,8 @@ def decode_file_aes_lsb(image_path: str):
     cipher = AES.new(key, AES.MODE_EAX, nonce)
     return cipher.decrypt_and_verify(ciphertext, tag)
 
+
+''' rsa + aes + lsb matching '''
+
+def decode_file_rsa_aes_lsb(image_path: str, key_path: str):
+    return 'decoded data'

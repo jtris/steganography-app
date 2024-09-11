@@ -23,12 +23,12 @@ class Root(ctk.CTk):
         
         # variables
         self.current_process = None # either 'encode' or 'decode'
-        self.encoding_technique = None # 'appending' or 'lsb' or 'lsb and grain'
+        self.encoding_technique = None 
         self.original_image_path = None
         self.decoded_data = None
         self.data_to_hide = None
         self.save_path = None
-        self.decryption_key_path = None
+        self.rsa_key_path = None
 
         # window parameters
         self.geometry(f'{W_WIDTH}x{W_HEIGHT}')
@@ -329,7 +329,7 @@ class EnterKeyFrame(tkinter.Frame):
         self.title1 = ctk.CTkLabel(self, text='choose or enter', font=MEDIUM_FONT)
         self.title1.place(x=20, y=25)
 
-        self.title2 = ctk.CTkLabel(self, text='the key path (.json)', font=MEDIUM_FONT)
+        self.title2 = ctk.CTkLabel(self, text='the key path (.pem)', font=MEDIUM_FONT)
         self.title2.place(x=20, y=85)
 
         self.error_label = ctk.CTkLabel(self, text='enter a valid path',
