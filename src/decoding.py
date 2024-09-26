@@ -1,3 +1,4 @@
+from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES
 from binascii import unhexlify
 from PIL import Image
@@ -151,12 +152,7 @@ def _transform_ciphertext_into_list_of_binary_values(ciphertext):
 
 
 def decode_file_aes_lsb(image_path: str):
-
-    if image_path[-3:] in ['png', 'bmp']:
-        encrypted_message = decode_png_file_lsb(image_path)
-    else:
-        encrypted_message = decode_jpg_file_lsb(image_path)
-
+    encrypted_message = decode_file_lsb(image_path)
     key = _get_aes_lsb_encrypted_value(index=0, encrypted_message=encrypted_message)
     nonce = _get_aes_lsb_encrypted_value(index=1, encrypted_message=encrypted_message)
     tag = _get_aes_lsb_encrypted_value(index=2, encrypted_message=encrypted_message)
@@ -173,4 +169,18 @@ def decode_file_aes_lsb(image_path: str):
 ''' rsa + aes + lsb matching '''
 
 def decode_file_rsa_aes_lsb(image_path: str, key_path: str):
+    lsb_data = decode_file_lsb(image_path)
+    print(f'data length: {len(lsb_data)}')
+    rsa_encrypted_data = lsb_data[:128] # RSA-encrypted [AES key, nonce, tag]
+    aes_encrypted_data = lsb_data[128:]
+
+    # import RSA key
+    with open(key_path, 'rb') as key_file:
+        key_file_contents = key_file.read()
+        key_file_contents = key_file_contents[2:-1] # remove nested byte prefix (b'')
+        key_file_contents = key_file_contents.replace(b'\\n', b'\n')
+
+        rsa_private_key = RSA.import_key(key_file_contents)
+
+
     return 'decoded data'

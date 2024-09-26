@@ -146,8 +146,8 @@ def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
 
     # save the key
     key_save_path = _get_save_path_directory(save_path) + 'rsa_key.pem'
-    with open(key_save_path, 'w') as f:
-        f.write(str(rsa_key.exportKey('PEM')))
+    with open(key_save_path, 'wb') as f:
+        f.write(rsa_key.exportKey('PEM'))
 
     # encode with lsb
     lsb_payload = rsa_ciphertext + aes_encrypted_data

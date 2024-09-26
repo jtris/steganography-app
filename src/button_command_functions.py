@@ -99,22 +99,22 @@ def button_decode_selection_command(controller):
 
     try:
         if controller.encoding_technique == 'appending':
-               controller.decoded_data = decode_file_appending(controller.original_image_path)
-     
+            controller.decoded_data = decode_file_appending(controller.original_image_path)
+ 
         elif controller.encoding_technique == 'metadata':
             controller.decoded_data = decode_file_metadata(controller.original_image_path)
-     
+ 
         elif controller.encoding_technique == 'lsb':
             controller.decoded_data = decode_file_lsb(controller.original_image_path)
-     
+ 
         elif controller.encoding_technique == 'aes+lsb':
             controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
-     
+ 
         elif controller.encoding_technique == 'rsa+aes+lsb':
             controller.decoded_data = decode_file_rsa_aes_lsb(controller.original_image_path, controller.rsa_key_path)
 
     except:
-       show_error_msg('an error occured while decoding the file')
+        show_error_msg('an error occured while decoding the file')
 
     _button_decode_selection_continuation(controller)
 
