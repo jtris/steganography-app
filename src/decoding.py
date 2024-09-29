@@ -12,19 +12,20 @@ import piexif
 def decode_file_appending(image_path: str):
     
     if 'png' in image_path[-4:]:
-        EOF_BYTES = 'IEND\\xaeB`\\x82' # png option
-        CONTENT_OFFSET = 14
-    else:
-        EOF_BYTES = '\\xff\\xd9' # default: jpg
+        EOF_BYTES = b'IEND\xaeB`\x82' # png option
         CONTENT_OFFSET = 8
+    else:
+        EOF_BYTES = b'\xff\xd9' # default: jpg
+        CONTENT_OFFSET = 2
 
 
     with open(image_path, 'rb') as f:
-        contents = str(f.read())
+        contents = f.read()
 
     text_start_index = contents.index(EOF_BYTES) + CONTENT_OFFSET
+    data = contents[text_start_index:-1]
+    return data.decode('utf-8')
 
-    return contents[text_start_index:-1]
 
 
 ''' metadata'''
@@ -175,7 +176,8 @@ def decode_file_aes_lsb(image_path: str):
     ciphertext = _transform_ciphertext_into_list_of_binary_values(ciphertext)
     ciphertext = _binary_to_byte_string(ciphertext)
 
-    return _decode_aes(ciphertext, key, nonce, tag)
+    hidden_data = _decode_aes(ciphertext, key, nonce, tag)
+    return hidden_data.decode('utf-8')
 
 
 def _decode_aes(ciphertext: bytes, key: bytes, nonce: bytes, tag: bytes):
@@ -207,4 +209,5 @@ def decode_file_rsa_aes_lsb(image_path: str, key_path: str):
     aes_tag = decrypted_rsa_data[32:]
 
     hidden_data = _decode_aes(ciphertext=aes_encrypted_data, key=aes_key, nonce=aes_nonce, tag=aes_tag)
+    hidden_data = hidden_data.decode('utf-8') # convert from bytes to str
     return hidden_data
