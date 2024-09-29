@@ -151,4 +151,5 @@ def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
 
     # encode with lsb
     lsb_payload = rsa_ciphertext + aes_encrypted_data
+    lsb_payload = bytes(''.join(["{:08b}".format(x) for x in lsb_payload]), encoding='utf-8')
     encode_file_by_lsb(file_path, lsb_payload, save_path)

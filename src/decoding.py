@@ -1,5 +1,5 @@
 from Crypto.PublicKey import RSA
-from Crypto.Cipher import AES
+from Crypto.Cipher import AES, PKCS1_v1_5
 from binascii import unhexlify
 from PIL import Image
 import numpy as np
@@ -113,6 +113,19 @@ def _get_16_bit_value_from_encrypted_message(data_index, encrypted_message):
     return values_list
 
 
+def _binary_string_to_list(binary_string: str) -> list:
+    binary_list = []
+
+    while len(binary_string) % 8 == 0:
+        binary_value = binary_string[:8]
+        binary_string = binary_string[8:]
+        binary_list.append(binary_value)
+
+        if len(binary_string) == 0: break
+    
+    return binary_list
+
+
 def _binary_to_byte_string(binary_list: list):
     result = b''
 
@@ -162,6 +175,10 @@ def decode_file_aes_lsb(image_path: str):
     ciphertext = _transform_ciphertext_into_list_of_binary_values(ciphertext)
     ciphertext = _binary_to_byte_string(ciphertext)
 
+    return _decode_aes(ciphertext, key, nonce, tag)
+
+
+def _decode_aes(ciphertext: bytes, key: bytes, nonce: bytes, tag: bytes):
     cipher = AES.new(key, AES.MODE_EAX, nonce)
     return cipher.decrypt_and_verify(ciphertext, tag)
 
@@ -169,18 +186,25 @@ def decode_file_aes_lsb(image_path: str):
 ''' rsa + aes + lsb matching '''
 
 def decode_file_rsa_aes_lsb(image_path: str, key_path: str):
-    lsb_data = decode_file_lsb(image_path)
-    print(f'data length: {len(lsb_data)}')
+    binary_lsb_data = decode_file_lsb(image_path)
+    binary_lsb_data = _binary_string_to_list(binary_lsb_data)
+    lsb_data = _binary_to_byte_string(binary_lsb_data)
+
     rsa_encrypted_data = lsb_data[:128] # RSA-encrypted [AES key, nonce, tag]
     aes_encrypted_data = lsb_data[128:]
 
     # import RSA key
     with open(key_path, 'rb') as key_file:
         key_file_contents = key_file.read()
-        key_file_contents = key_file_contents[2:-1] # remove nested byte prefix (b'')
-        key_file_contents = key_file_contents.replace(b'\\n', b'\n')
-
         rsa_private_key = RSA.import_key(key_file_contents)
 
+    rsa_cipher = PKCS1_v1_5.new(rsa_private_key)
+    decrypted_rsa_data = rsa_cipher.decrypt(rsa_encrypted_data, None)
 
-    return 'decoded data'
+    # each component has 16 bytes
+    aes_key = decrypted_rsa_data[:16]
+    aes_nonce = decrypted_rsa_data[16:32]
+    aes_tag = decrypted_rsa_data[32:]
+
+    hidden_data = _decode_aes(ciphertext=aes_encrypted_data, key=aes_key, nonce=aes_nonce, tag=aes_tag)
+    return hidden_data

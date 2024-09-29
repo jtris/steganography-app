@@ -100,16 +100,16 @@ def button_decode_selection_command(controller):
     try:
         if controller.encoding_technique == 'appending':
             controller.decoded_data = decode_file_appending(controller.original_image_path)
- 
+
         elif controller.encoding_technique == 'metadata':
             controller.decoded_data = decode_file_metadata(controller.original_image_path)
- 
+
         elif controller.encoding_technique == 'lsb':
             controller.decoded_data = decode_file_lsb(controller.original_image_path)
- 
+
         elif controller.encoding_technique == 'aes+lsb':
             controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
- 
+
         elif controller.encoding_technique == 'rsa+aes+lsb':
             controller.decoded_data = decode_file_rsa_aes_lsb(controller.original_image_path, controller.rsa_key_path)
 
@@ -253,7 +253,7 @@ def encode_and_save(controller):
     try:
         if controller.encoding_technique == 'appending':
             encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
-   
+
         elif controller.encoding_technique == 'metadata':
             encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
 
