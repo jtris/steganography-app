@@ -151,28 +151,8 @@ def _button_decode_selection_continuation(controller):
 
 
 # EncodeSelectionFrame button functions
-def button_encode_selection_appending_command(controller):
-    controller.encoding_technique = 'appending'
-    controller.show_frame('EncodeTextOrFileFrame')
-
-
-def button_encode_selection_metadata_command(controller):
-    controller.encoding_technique = 'metadata'
-    controller.show_frame('EncodeTextOrFileFrame')
-
-
-def button_encode_selection_lsb_command(controller):
-    controller.encoding_technique = 'lsb'
-    controller.show_frame('EncodeTextOrFileFrame')
-
-
-def button_encode_selection_aes_lsb_command(controller):
-    controller.encoding_technique = 'aes+lsb'
-    controller.show_frame('EncodeTextOrFileFrame')
-
-
-def button_encode_selection_rsa_aes_lsb_command(controller):
-    controller.encoding_technique = 'rsa+aes+lsb'
+def button_encode_selection_command(controller, encoding_technique: str):
+    controller.encoding_technique = encoding_technique
     controller.show_frame('EncodeTextOrFileFrame')
 
 
@@ -305,27 +285,3 @@ def button_enterkeyframe_continue_command(master_frame, controller):
     
     master_frame.error_label.place_forget()
     button_decode_selection_command(controller)
-
-    '''
-    controller.encoding_technique = 'rsa+aes+lsb'
-    _button_decode_selection_continuation(controller)
-
-    entry_input = master_frame.entry.get().strip()
-    master_frame.entry.delete(0, 'end')
-
-    try:
-        with open(entry_input, 'r') as f:
-            pass
-    except:
-        master_frame.error_label.place(x=35, y=280)
-        return
-
-    if entry_input[-4:] != '.pem':
-        master_frame.error_label.place(x=35, y=280)
-        return
-
-    controller.decoded_data = _decode_rsa_aes_lsb(entry_input)
-    master_frame.error_label.place_forget()
-    
-    controller.show_frame('PrintoutFrame')
-    '''

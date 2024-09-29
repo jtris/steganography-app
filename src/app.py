@@ -150,27 +150,27 @@ class EncodeSelectionFrame(tkinter.Frame):
         self.title2.place(x=20, y=85)
 
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_selection_appending_command(controller),
+            command=lambda:button_encode_selection_command(controller, 'appending'),
             text='append', font=ERROR_FONT, width=350, height=80)
         self.button_appending.place(x=40, y=175)
 
         self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_selection_metadata_command(controller),
+            command=lambda:button_encode_selection_command(controller, 'metadata'),
             text='hide in metadata', font=ERROR_FONT, width=350, height=80)
         self.button_metadata.place(x=40, y=265)
 
         self.button_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_selection_lsb_command(controller),
+            command=lambda:button_encode_selection_command(controller, 'lsb'),
             text='LSB', font=ERROR_FONT, width=350, height=80)
         self.button_lsb.place(x=40, y=355)
 
         self.button_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_selection_aes_lsb_command(controller),
+            command=lambda:button_encode_selection_command(controller, 'aes+lsb'),
             text='AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_encode_selection_rsa_aes_lsb_command(controller),
+            command=lambda:button_encode_selection_command(controller, 'rsa+aes+lsb'),
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
