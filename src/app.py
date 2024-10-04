@@ -47,17 +47,26 @@ class Root(ctk.CTk):
         self.file_explorer_icon = ctk.CTkImage(light_image=Image.open('assets/file_explorer_icon.png'), size=(60, 50))
         self.save_icon = ctk.CTkImage(light_image=Image.open('assets/save_icon.png'), size=(40, 40))
 
-        frames_ = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
+        _frames = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
                     HideFileFrame, EnterMessageFrame, SaveFrame, PrintoutFrame,
                     EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame]
         
         self.frames = {}
-        for frame_class in frames_:
+        for frame_class in _frames:
             frame = frame_class(container_frame, self)
             self.frames[frame.__class__.__name__] = frame
             frame.grid(row=0, column=0, sticky='nsew')
 
         self.show_frame('MenuFrame')
+
+    def clear_data(self):
+        self.current_process = None 
+        self.encoding_technique = None 
+        self.original_image_path = None
+        self.decoded_data = None
+        self.data_to_hide = None
+        self.save_path = None
+        self.rsa_key_path = None
 
     def show_frame(self, frame_cls_name):
         frame = self.frames[frame_cls_name]

@@ -38,13 +38,21 @@ def decode_file_metadata(image_path: str):
 
 ''' lsb matching'''
 
-def filter_message(data: str) -> str:
+def filter_message(data: str | bytes) -> str | bytes:
     # finds end of message indicated by a sequence of special characters
     try:
         return data[:data.index(10*'`')]
 
     except ValueError:
         return data
+    
+    # data is in bytes instead of str
+    except TypeError: 
+        try:
+            return data[:data.index(10*b'`')]
+        
+        except ValueError:
+            return data
 
 
 def decode_file_lsb(image_path: str):
@@ -70,8 +78,9 @@ def decode_jpg_file_lsb(image_path: str):
 
         byte_value |= message_bytes[i] << i % 8
 
-    contents = ''.join([chr(c) for c in contents])
-    return filter_message(contents)
+    contents = b''.join([(c).to_bytes(1, byteorder='big') for c in contents])
+    contents = filter_message(contents)
+    return contents.decode('utf-8')
 
 
 def decode_png_file_lsb(image_path: str):
@@ -84,14 +93,13 @@ def decode_png_file_lsb(image_path: str):
     image_numpy_array = image_numpy_array & 1
     image_numpy_array = np.packbits(image_numpy_array)
 
-    contents = ''
+    contents = b''
 
     for x in image_numpy_array:
+        contents += (int(x)).to_bytes(1, byteorder='big')
 
-        if chr(x).isprintable():
-            contents += chr(x)
-
-    return filter_message(contents)
+    contents = filter_message(contents)
+    return contents.decode('utf-8')
 
 
 ''' aes + lsb matching '''

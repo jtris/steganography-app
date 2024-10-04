@@ -19,6 +19,8 @@ def home_button_command(master_frame, controller):
         master_frame.entry.delete(0, 'end')
     elif frame_name == 'EnterMessageFrame':
         master_frame.message_textbox.delete('0.0', 'end')
+    
+    controller.clear_data()
 
 
 def button_file_explorer_command(master_frame, controller, current_frame):
@@ -222,6 +224,7 @@ def button_saveframe_save_command(master_frame, controller):
     elif controller.current_process == 'decode':
         save_decoded(controller)
 
+    controller.clear_data()
     controller.show_frame('MenuFrame')
     
 
