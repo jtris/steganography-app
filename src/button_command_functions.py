@@ -152,6 +152,63 @@ def _button_decode_selection_continuation(controller):
     controller.show_frame('PrintoutFrame')
 
 
+# *auto decoding
+def button_auto_decode(controller):
+    if _button_auto_decode_detect_data(controller) is False:
+        show_error_msg("no hidden data was detected, this function works best \
+                       with data that was hidden by this program")
+
+    AutoDecodingPrintoutFrame = controller.frames['AutoDecodingPrintoutFrame']
+    default_title = AutoDecodingPrintoutFrame.title_text
+    AutoDecodingPrintoutFrame.title.configure(text=default_title+controller.encoding_technique)
+    _button_auto_decode_continuation(controller)
+
+
+def _button_auto_decode_detect_data(controller) -> bool: # True=data found, False=not found
+    # appending
+    appending_decoded_data = decode_file_appending(controller.original_image_path) 
+    if appending_decoded_data != '':
+        controller.decoded_data = appending_decoded_data 
+        controller.encoding_technique = 'appending'
+        return True
+
+    # aes+lsb
+    try:
+        controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
+        controller.encoding_technique = 'aes+lsb'
+        return True
+
+    except UnicodeDecodeError:
+        pass
+
+    except ValueError:
+        pass
+    
+    # lsb
+    try:
+        controller.decoded_data = decode_file_lsb(controller.original_image_path)
+        controller.encoding_technique = 'lsb'
+        return True
+    except UnicodeDecodeError:
+        pass
+
+    # metadata
+    try:
+        controller.decoded_data = decode_file_metadata(controller.original_image_path)
+        controller.encoding_technique = 'metadata'
+        return True
+    except KeyError: # the metadata field doesn't exist
+        pass
+    
+    return False
+
+
+def _button_auto_decode_continuation(controller):
+    controller.frames['AutoDecodingPrintoutFrame'].message_textbox.delete('0.0', 'end')
+    controller.frames['AutoDecodingPrintoutFrame'].message_textbox.insert('insert', str(controller.decoded_data))
+    controller.show_frame('AutoDecodingPrintoutFrame')
+
+
 # EncodeSelectionFrame button functions
 def button_encode_selection_command(controller, encoding_technique: str):
     controller.encoding_technique = encoding_technique

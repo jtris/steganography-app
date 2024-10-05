@@ -49,7 +49,8 @@ class Root(ctk.CTk):
 
         _frames = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
                     HideFileFrame, EnterMessageFrame, SaveFrame, PrintoutFrame,
-                    EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame]
+                    EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame,
+                    AutoDecodingPrintoutFrame]
         
         self.frames = {}
         for frame_class in _frames:
@@ -221,6 +222,11 @@ class DecodeSelectionFrame(tkinter.Frame):
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
+        self.button_auto = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_auto_decode(controller),
+            text='*auto', font=ERROR_FONT, width=350, height=80)
+        self.button_auto.place(x=400, y=355)
+
         place_home_button(self, controller)
 
 
@@ -327,6 +333,25 @@ class PrintoutFrame(tkinter.Frame):
         self.message_textbox = ctk.CTkTextbox(self, width=630, height=440, corner_radius=15,
             fg_color='transparent', font=SMALL_FONT, border_color='dark grey', border_width=2)
         self.message_textbox.place(x=30, y=30)
+
+
+class AutoDecodingPrintoutFrame(tkinter.Frame):
+    def __init__(self, parent, controller):
+        tkinter.Frame.__init__(self, parent)
+
+        place_home_button(self, controller)
+
+        self.title_text = 'data hidden with: '
+        self.title = ctk.CTkLabel(self, text=self.title_text, font=ERROR_FONT)
+        self.title.place(x=30, y=25)
+
+        self.save_button = ctk.CTkButton(master=self, corner_radius=15, text=None,
+            command=lambda:button_save_printoutframe_command(controller), image=controller.save_icon, width=85, height=80)
+        self.save_button.place(x=690, y=125)
+
+        self.message_textbox = ctk.CTkTextbox(self, width=630, height=380, corner_radius=15,
+            fg_color='transparent', font=SMALL_FONT, border_color='dark grey', border_width=2)
+        self.message_textbox.place(x=30, y=80)
 
 
 class EnterKeyFrame(tkinter.Frame):
