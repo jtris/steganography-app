@@ -24,6 +24,10 @@ def home_button_command(master_frame, controller):
 
 
 def button_file_explorer_command(master_frame, controller, current_frame):
+    if current_frame == 'GenerateRSAKeysFrame':
+        _button_file_explorer_save_rsa_keys_command(master_frame, controller)
+        return
+
     filepath = filedialog.askopenfilename(initialdir = "/", title = "Select a file to use: ")
 
     if not path.isfile(filepath):
@@ -53,6 +57,13 @@ def button_file_explorer_command(master_frame, controller, current_frame):
     elif current_frame == 'EnterKeyFrame':
         controller.rsa_key_path = filepath
         button_enterkeyframe_continue_command(master_frame, controller)
+
+
+def _button_file_explorer_save_rsa_keys_command(master_frame, controller):
+    filepath = filedialog.askdirectory(initialdir='/', title='select a directory for storing the RSA keys')
+    controller.save_path = filepath
+    #
+
 
 # MenuFrame button functions
 def button_encode_command(controller):
@@ -207,6 +218,11 @@ def _button_auto_decode_continuation(controller):
     controller.frames['AutoDecodingPrintoutFrame'].message_textbox.delete('0.0', 'end')
     controller.frames['AutoDecodingPrintoutFrame'].message_textbox.insert('insert', str(controller.decoded_data))
     controller.show_frame('AutoDecodingPrintoutFrame')
+
+
+# GenerateRSAKeysFrame
+def button_generate_rsa_keys_command(controller):
+    controller.show_frame('GenerateRSAKeysFrame')
 
 
 # EncodeSelectionFrame button functions

@@ -50,7 +50,7 @@ class Root(ctk.CTk):
         _frames = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
                     HideFileFrame, EnterMessageFrame, SaveFrame, PrintoutFrame,
                     EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame,
-                    AutoDecodingPrintoutFrame]
+                    AutoDecodingPrintoutFrame, GenerateRSAKeysFrame]
         
         self.frames = {}
         for frame_class in _frames:
@@ -183,6 +183,11 @@ class EncodeSelectionFrame(tkinter.Frame):
             command=lambda:button_encode_selection_command(controller, 'rsa+aes+lsb'),
             text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
+
+        self.button_generate_rsa_keys = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_generate_rsa_keys_command(controller),
+            text='generate RSA keys', font=ERROR_FONT, width=350, height=80)
+        self.button_generate_rsa_keys.place(x=400, y=355)
 
         place_home_button(self, controller)
 
@@ -377,6 +382,33 @@ class EnterKeyFrame(tkinter.Frame):
 
         self.button_save = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_enterkeyframe_continue_command(self, controller), text='continue', font=MEDIUM_FONT, width=450, height=80)
+        self.button_save.place(x=30, y=390)
+
+
+class GenerateRSAKeysFrame(tkinter.Frame):
+    def __init__(self, parent, controller):
+        tkinter.Frame.__init__(self, parent)
+
+        place_home_button(self, controller)
+
+        self.title1 = ctk.CTkLabel(self, text='choose/enter where', font=MEDIUM_FONT)
+        self.title1.place(x=20, y=25)
+
+        self.title2 = ctk.CTkLabel(self, text='to save the keys', font=MEDIUM_FONT)
+        self.title2.place(x=20, y=85)
+
+        self.error_label = ctk.CTkLabel(self, text='enter a valid path',
+            text_color='red', font=ERROR_FONT, fg_color='transparent')
+
+        self.entry = ctk.CTkEntry(self, font=ENTRY_FONT,
+            width=600, height=100, corner_radius=15)
+        self.entry.place(x=30, y=170)
+
+        place_file_explorer_button(master=self, controller=controller, current_frame='GenerateRSAKeysFrame')
+
+        self.button_save = ctk.CTkButton(master=self, corner_radius=15,
+            command=None,
+            text='continue', font=MEDIUM_FONT, width=450, height=80)
         self.button_save.place(x=30, y=390)
 
 
