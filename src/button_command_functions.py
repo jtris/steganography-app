@@ -25,7 +25,7 @@ def home_button_command(master_frame, controller):
 
 def button_file_explorer_command(master_frame, controller, current_frame):
     if current_frame == 'GenerateRSAKeysFrame':
-        _button_file_explorer_save_rsa_keys_command(master_frame, controller)
+        _button_file_explorer_save_rsa_keys_command(controller)
         return
 
     filepath = filedialog.askopenfilename(initialdir = "/", title = "Select a file to use: ")
@@ -59,11 +59,16 @@ def button_file_explorer_command(master_frame, controller, current_frame):
         button_enterkeyframe_continue_command(master_frame, controller)
 
 
-def _button_file_explorer_save_rsa_keys_command(master_frame, controller):
+def _button_file_explorer_save_rsa_keys_command(controller):
     filepath = filedialog.askdirectory(initialdir='/', title='select a directory for storing the RSA keys')
-    controller.save_path = filepath
-    #
 
+    try:
+        generate_and_save_rsa_keys(filepath)
+        controller.show_frame('MenuFrame')
+
+    except PermissionError:
+        show_error_msg("This program isn't allowed to work with this directory")
+        
 
 # MenuFrame button functions
 def button_encode_command(controller):

@@ -156,4 +156,13 @@ def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
 
 
 def generate_and_save_rsa_keys(save_path: str):
+    private_rsa_key = RSA.generate(1024)
+    public_rsa_key = private_rsa_key.public_key()
+
+    with open(save_path + '/private_rsa_key.pem', 'wb') as f:
+        f.write(private_rsa_key.exportKey('PEM'))
+
+    with open(save_path + '/public_rsa_key.pem', 'wb') as f:
+        f.write(public_rsa_key.exportKey('PEM'))
+
     pass
