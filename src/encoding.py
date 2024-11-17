@@ -130,8 +130,7 @@ def _get_save_path_directory(save_path):
     return save_path[:last_slash+1]
 
 
-def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
-
+def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, rsa_key_path: str, save_path: str):
     # encrypt data with AES
     aes_key = get_random_bytes(16)
     aes_cipher = AES.new(aes_key, AES.MODE_EAX)
@@ -140,14 +139,11 @@ def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, save_path: str):
     nonce = aes_cipher.nonce
 
     rsa_payload = aes_key + nonce + tag
-    rsa_key = RSA.generate(1024)
-    rsa_cipher = PKCS1_v1_5.new(rsa_key)
-    rsa_ciphertext = rsa_cipher.encrypt(rsa_payload) # always ends up being 128 bytes long
+    with open(rsa_key_path, 'rb') as f:
+        rsa_public_key = RSA.import_key(f.read())
 
-    # save the key
-    key_save_path = _get_save_path_directory(save_path) + 'rsa_key.pem'
-    with open(key_save_path, 'wb') as f:
-        f.write(rsa_key.exportKey('PEM'))
+    rsa_cipher = PKCS1_v1_5.new(rsa_public_key)
+    rsa_ciphertext = rsa_cipher.encrypt(rsa_payload) # always ends up being 128 bytes long
 
     # encode with lsb
     lsb_payload = rsa_ciphertext + aes_encrypted_data
@@ -165,4 +161,3 @@ def generate_and_save_rsa_keys(save_path: str):
     with open(save_path + '/public_rsa_key.pem', 'wb') as f:
         f.write(public_rsa_key.exportKey('PEM'))
 
-    pass

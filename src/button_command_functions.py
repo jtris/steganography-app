@@ -236,6 +236,11 @@ def button_encode_selection_command(controller, encoding_technique: str):
     controller.show_frame('EncodeTextOrFileFrame')
 
 
+def button_encode_selection_rsa_aes_lsb_command(controller):
+    controller.encoding_technique = 'rsa+aes+lsb'
+    controller.show_frame('EnterKeyFrame')
+
+
 # EncodeTextOrFileFrame button functions
 def button_hide_file_command(controller):
     controller.show_frame('HideFileFrame')
@@ -310,6 +315,7 @@ def encode_and_save(controller):
     original_image_path = controller.original_image_path
     save_path = controller.save_path
     data = controller.data_to_hide
+    rsa_key_path = controller.rsa_key_path
 
     try:
         if controller.encoding_technique == 'appending':
@@ -325,7 +331,7 @@ def encode_and_save(controller):
             encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path)
         
         elif controller.encoding_technique == 'rsa+aes+lsb':
-            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, save_path=save_path)
+            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path, save_path=save_path)
     
     except:
        show_error_msg('an error occured while encoding or saving the file')
@@ -365,4 +371,9 @@ def button_enterkeyframe_continue_command(master_frame, controller):
         controller.rsa_key_path = entry_input
     
     master_frame.error_label.place_forget()
-    button_decode_selection_command(controller)
+    
+    if controller.current_process == 'decode':
+        button_decode_selection_command(controller)
+    
+    else:
+        controller.show_frame('EncodeTextOrFileFrame')
