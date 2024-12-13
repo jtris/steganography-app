@@ -173,14 +173,16 @@ def _transform_ciphertext_into_list_of_binary_values(ciphertext):
     return ciphertext_list
 
 
-def decode_file_aes_lsb(image_path: str):
+def decode_file_aes_lsb(image_path: str, aes_key_path: str):
+    with open(aes_key_path, 'rb') as f:
+        key = f.read()
+
     encrypted_message = decode_file_lsb(image_path)
-    key = _get_aes_lsb_encrypted_value(index=0, encrypted_message=encrypted_message)
-    nonce = _get_aes_lsb_encrypted_value(index=1, encrypted_message=encrypted_message)
-    tag = _get_aes_lsb_encrypted_value(index=2, encrypted_message=encrypted_message)
+    nonce = _get_aes_lsb_encrypted_value(index=0, encrypted_message=encrypted_message)
+    tag = _get_aes_lsb_encrypted_value(index=1, encrypted_message=encrypted_message)
 
     component_length = 16 * 8 # length of the key, nonce, or tag in bits, each 16 bytes
-    ciphertext = encrypted_message[3*component_length:]
+    ciphertext = encrypted_message[2*component_length:]
     ciphertext = _transform_ciphertext_into_list_of_binary_values(ciphertext)
     ciphertext = _binary_to_byte_string(ciphertext)
 

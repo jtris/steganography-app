@@ -107,20 +107,22 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
 ''' aes + lsb matching '''
 
 def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str):
-    
-    # encrypt data with AES
     key = get_random_bytes(16)
     aes_cipher = AES.new(key, AES.MODE_EAX)
 
     encrypted_data, tag = aes_cipher.encrypt_and_digest(data)
     nonce = aes_cipher.nonce
 
-    # put all information necessary for decrypting together as binary
-    payload = key + nonce + tag + encrypted_data
+    payload = nonce + tag + encrypted_data
     payload = ''.join(["{:08b}".format(x) for x in payload])
 
     transformed_data = bytes(payload, encoding='utf-8')
     encode_file_by_lsb(file_path, transformed_data, save_path)
+
+    # export aes key
+    key_save_path = os.path.dirname(save_path) + '/aes_key.pem'
+    with open(key_save_path, 'wb') as f:
+        f.write(key)
 
 
 ''' rsa + aes + lsb matching '''

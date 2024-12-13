@@ -55,7 +55,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
         controller.show_frame('MenuFrame')
 
     elif current_frame == 'EnterKeyFrame':
-        controller.rsa_key_path = filepath
+        controller.key_path = filepath
         button_enterkeyframe_continue_command(master_frame, controller)
 
 
@@ -126,10 +126,10 @@ def button_decode_selection_command(controller):
             controller.decoded_data = decode_file_lsb(controller.original_image_path)
 
         elif controller.encoding_technique == 'aes+lsb':
-            controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
+            controller.decoded_data = decode_file_aes_lsb(controller.original_image_path, controller.key_path)
 
         elif controller.encoding_technique == 'rsa+aes+lsb':
-            controller.decoded_data = decode_file_rsa_aes_lsb(controller.original_image_path, controller.rsa_key_path)
+            controller.decoded_data = decode_file_rsa_aes_lsb(controller.original_image_path, controller.key_path)
 
     except:
         show_error_msg('an error occured while decoding the file')
@@ -154,7 +154,7 @@ def button_decode_selection_lsb_command(controller):
 
 def button_decode_selection_aes_lsb_command(controller):
     controller.encoding_technique = 'aes+lsb'
-    button_decode_selection_command(controller)
+    controller.show_frame('EnterKeyFrame')
 
 
 def button_decode_selection_rsa_aes_lsb_command(controller):
@@ -315,7 +315,7 @@ def encode_and_save(controller):
     original_image_path = controller.original_image_path
     save_path = controller.save_path
     data = controller.data_to_hide
-    rsa_key_path = controller.rsa_key_path
+    rsa_key_path = controller.key_path
 
     try:
         if controller.encoding_technique == 'appending':
@@ -353,7 +353,7 @@ def save_decoded(controller):
 
 def button_enterkeyframe_continue_command(master_frame, controller):
 
-    if controller.rsa_key_path is None:
+    if controller.key_path is None:
         entry_input = master_frame.entry.get().strip()
         master_frame.entry.delete(0, 'end')
 
@@ -368,7 +368,7 @@ def button_enterkeyframe_continue_command(master_frame, controller):
             master_frame.error_label.place(x=35, y=280)
             return
         
-        controller.rsa_key_path = entry_input
+        controller.key_path = entry_input
     
     master_frame.error_label.place_forget()
     

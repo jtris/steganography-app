@@ -28,7 +28,7 @@ class Root(ctk.CTk):
         self.decoded_data = None
         self.data_to_hide = None
         self.save_path = None
-        self.rsa_key_path = None
+        self.key_path = None
 
         # window parameters
         self.geometry(f'{W_WIDTH}x{W_HEIGHT}')
@@ -67,7 +67,7 @@ class Root(ctk.CTk):
         self.decoded_data = None
         self.data_to_hide = None
         self.save_path = None
-        self.rsa_key_path = None
+        self.key_path = None
 
     def show_frame(self, frame_cls_name):
         frame = self.frames[frame_cls_name]
