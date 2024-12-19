@@ -20,6 +20,7 @@ ABOUT_TEXT_3 = '(see github.com/jtris)'
 class Root(ctk.CTk):
     def __init__(self, *args, **kwargs): # init App class
         super().__init__(*args, **kwargs) # init Tk class
+        ctk.set_appearance_mode('light')
         
         # variables
         self.current_process = None # either 'encode' or 'decode'

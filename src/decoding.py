@@ -6,6 +6,8 @@ import numpy as np
 import jpeglib
 import piexif
 
+from mode_to_bit_depth import get_bit_depth
+
 
 ''' appending '''
 
@@ -88,8 +90,9 @@ def decode_png_file_lsb(image_path: str):
     with Image.open(image_path) as image:
         image_width, image_height = image.size
         image_numpy_array = np.array(image)
+        image_bit_depth = get_bit_depth(image.mode)
 
-    image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*3)
+    image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*image_bit_depth//8)
     image_numpy_array = image_numpy_array & 1
     image_numpy_array = np.packbits(image_numpy_array)
 

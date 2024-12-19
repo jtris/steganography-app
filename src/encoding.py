@@ -8,6 +8,8 @@ import piexif
 import random
 import os
 
+from mode_to_bit_depth import get_bit_depth
+
 
 ''' appending '''
 
@@ -84,11 +86,18 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
     data_bytes = ''.join(["{:08b}".format(x) for x in data])
 
     with Image.open(file_path) as image:
+        image_bit_depth = get_bit_depth(image.mode)
+
+        # convert to a suitable format for PIL
+        if image_bit_depth == 8:
+            image = image.convert() # converts to bit-depth of 32
+            image_bit_depth = get_bit_depth(image.mode)
+
         image_width, image_height = image.size
         image_numpy_array = np.array(image)
 
     # flatten pixel arrays
-    image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*3)
+    image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*image_bit_depth//8)
 
     # encode data
     for x in range(len(data_bytes)):
@@ -99,7 +108,7 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
             image_numpy_array[x] = int(binary_value, 2) + random.choice([+1, -1])
 
     # resize to original dimensions
-    image_numpy_array = np.reshape(image_numpy_array, (image_height, image_width, 3))
+    image_numpy_array = np.reshape(image_numpy_array, (image_height, image_width, image_bit_depth//8))
 
     Image.fromarray(image_numpy_array).save(save_path)
 
