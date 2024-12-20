@@ -188,18 +188,6 @@ def _button_auto_decode_detect_data(controller) -> bool: # True=data found, Fals
         controller.encoding_technique = 'appending'
         return True
 
-    # aes+lsb
-    try:
-        controller.decoded_data = decode_file_aes_lsb(controller.original_image_path)
-        controller.encoding_technique = 'aes+lsb'
-        return True
-
-    except UnicodeDecodeError:
-        pass
-
-    except ValueError:
-        pass
-    
     # lsb
     try:
         controller.decoded_data = decode_file_lsb(controller.original_image_path)
