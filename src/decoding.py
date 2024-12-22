@@ -13,7 +13,7 @@ from mode_to_bit_depth import get_bit_depth
 
 def decode_file_appending(image_path: str):
     
-    if 'png' in image_path[-4:]:
+    if image_path[-3:] == 'png':
         EOF_BYTES = b'IEND\xaeB`\x82' # png option
         CONTENT_OFFSET = 8
     else:

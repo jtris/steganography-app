@@ -89,7 +89,7 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
         image_bit_depth = get_bit_depth(image.mode)
 
         # convert to a suitable format for PIL
-        if image_bit_depth == 8:
+        if image_bit_depth < 24:
             image = image.convert() # converts to bit-depth of 32
             image_bit_depth = get_bit_depth(image.mode)
 

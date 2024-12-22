@@ -5,6 +5,9 @@ from encoding import *
 from decoding import *
 
 
+VALID_FILE_TYPES = ['png', 'jpg', 'jpeg']
+
+
 def show_error_msg(message):
     messagebox.showerror('ERROR', message)
 
@@ -37,6 +40,11 @@ def button_file_explorer_command(master_frame, controller, current_frame):
 
     if current_frame == 'ImgPathFrame':
         controller.original_image_path = filepath
+        
+        if not _is_valid_filetype(filepath):
+            show_error_msg('This file type is not supported')
+            home_button_command(current_frame, controller)
+            return
 
         if controller.current_process == 'encode':
             img_path_frame_continue_e(controller)
@@ -86,12 +94,22 @@ def button_about_command(controller):
 
 
 # ImgPathFrame button functions
+def _is_valid_filetype(path):
+    return path[-3:].lower() in VALID_FILE_TYPES
+
+
 def button_imgpath_continue_command(master_frame, controller):
     entry_input = master_frame.entry.get().strip()
     master_frame.entry.delete(0, 'end')
 
+    # validate file
     if not path.isfile(entry_input):
         master_frame.error_label.place(x=35, y=280)
+        return
+
+    if not _is_valid_filetype(entry_input):
+        show_error_msg('This file type is not supported')
+        home_button_command(master_frame, controller)
         return
 
     # hide the error label
