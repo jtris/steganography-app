@@ -7,10 +7,14 @@ from button_command_functions import *
 
 W_WIDTH = 800
 W_HEIGHT = 500
+LARGE_TITLE_FONT = ('Fixedsys', 60)
 MEDIUM_FONT = ('Fixedsys', 50)
 ENTRY_FONT = ('Fixedsys', 40)
 ERROR_FONT = ('Fixedsys', 30)
+SMALL_TITLE_FONT = ('Fixedsys', 30)
 SMALL_FONT = ('Fixedsys', 20)
+
+DEFAULT_WINDOW_TITLE = 'Steganography'
 
 ABOUT_TEXT = 'Supports JPG and PNG file types.'
 ABOUT_TEXT_2 = 'Source code can be found on github.'
@@ -34,7 +38,7 @@ class Root(ctk.CTk):
         # window parameters
         self.geometry(f'{W_WIDTH}x{W_HEIGHT}')
         self.resizable(False, False)
-        self.title("Steganography")
+        self.title(DEFAULT_WINDOW_TITLE)
         ctk.set_default_color_theme("green")
 
         # container frame
@@ -74,6 +78,12 @@ class Root(ctk.CTk):
         frame = self.frames[frame_cls_name]
         frame.tkraise()
 
+    def append_to_title(self, text: str):
+        self.title(self.title() + ' / '+ text)
+
+    def reset_title(self):
+        self.title(DEFAULT_WINDOW_TITLE)
+
 
 
 # FRAMES
@@ -82,7 +92,7 @@ class MenuFrame(tkinter.Frame):
     def __init__(self, parent, controller):
         tkinter.Frame.__init__(self, parent)
 
-        self.title_label = ctk.CTkLabel(self, text='steganography', font=('Fixedsys', 60))
+        self.title_label = ctk.CTkLabel(self, text='steganography', font=LARGE_TITLE_FONT)
         self.title_label.place(x=W_WIDTH/2, y=90, anchor=tkinter.CENTER)
 
         self.button_encode = ctk.CTkButton(master=self, corner_radius=15,
@@ -111,13 +121,13 @@ class AboutFrame(tkinter.Frame):
         self.title2 = ctk.CTkLabel(self, text='and this app', font=MEDIUM_FONT)
         self.title2.place(x=40, y=85)
 
-        self.body_text = ctk.CTkLabel(self, text=ABOUT_TEXT, font=ERROR_FONT)
+        self.body_text = ctk.CTkLabel(self, text=ABOUT_TEXT, font=SMALL_TITLE_FONT)
         self.body_text.place(x=40, y=190)
 
-        self.body_text_2 = ctk.CTkLabel(self, text=ABOUT_TEXT_2, font=ERROR_FONT)
+        self.body_text_2 = ctk.CTkLabel(self, text=ABOUT_TEXT_2, font=SMALL_TITLE_FONT)
         self.body_text_2.place(x=40, y=230)
 
-        self.body_text_3 = ctk.CTkLabel(self, text=ABOUT_TEXT_3, font=ERROR_FONT)
+        self.body_text_3 = ctk.CTkLabel(self, text=ABOUT_TEXT_3, font=SMALL_TITLE_FONT)
         self.body_text_3.place(x=40, y=270)
 
         place_home_button(master=self, controller=controller)
@@ -162,32 +172,32 @@ class EncodeSelectionFrame(tkinter.Frame):
 
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_command(controller, 'appending'),
-            text='append', font=ERROR_FONT, width=350, height=80)
+            text='append', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_appending.place(x=40, y=175)
 
         self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_command(controller, 'metadata'),
-            text='hide in metadata', font=ERROR_FONT, width=350, height=80)
+            text='hide in metadata', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_metadata.place(x=40, y=265)
 
         self.button_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_command(controller, 'lsb'),
-            text='LSB', font=ERROR_FONT, width=350, height=80)
+            text='LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_lsb.place(x=40, y=355)
 
         self.button_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_command(controller, 'aes+lsb'),
-            text='AES + LSB', font=ERROR_FONT, width=350, height=80)
+            text='AES + LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_encode_selection_rsa_aes_lsb_command(controller),
-            text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
+            text='RSA + AES + LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
         self.button_generate_rsa_keys = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_generate_rsa_keys_command(controller),
-            text='generate RSA keys', font=ERROR_FONT, width=350, height=80)
+            text='generate RSA keys', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_generate_rsa_keys.place(x=400, y=355)
 
         place_home_button(self, controller)
@@ -205,32 +215,32 @@ class DecodeSelectionFrame(tkinter.Frame):
 
         self.button_appending = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_appending_command(controller),
-            text='appended', font=ERROR_FONT, width=350, height=80)
+            text='appended', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_appending.place(x=40, y=175)
 
         self.button_metadata = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_metadata_command(controller),
-            text='hidden in metadata', font=ERROR_FONT, width=350, height=80)
+            text='hidden in metadata', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_metadata.place(x=40, y=265)
 
         self.button_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_lsb_command(controller),
-            text='LSB', font=ERROR_FONT, width=350, height=80)
+            text='LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_lsb.place(x=40, y=355)
 
         self.button_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_aes_lsb_command(controller),
-            text='AES + LSB', font=ERROR_FONT, width=350, height=80)
+            text='AES + LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_aes_lsb.place(x=400, y=175)
 
         self.button_rsa_aes_lsb = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_decode_selection_rsa_aes_lsb_command(controller),
-            text='RSA + AES + LSB', font=ERROR_FONT, width=350, height=80)
+            text='RSA + AES + LSB', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_rsa_aes_lsb.place(x=400, y=265)
 
         self.button_auto = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_auto_decode(controller),
-            text='*auto', font=ERROR_FONT, width=350, height=80)
+            text='*auto', font=SMALL_TITLE_FONT, width=350, height=80)
         self.button_auto.place(x=400, y=355)
 
         place_home_button(self, controller)
@@ -348,7 +358,7 @@ class AutoDecodingPrintoutFrame(tkinter.Frame):
         place_home_button(self, controller)
 
         self.title_text = 'data hidden with: '
-        self.title = ctk.CTkLabel(self, text=self.title_text, font=ERROR_FONT)
+        self.title = ctk.CTkLabel(self, text=self.title_text, font=SMALL_TITLE_FONT)
         self.title.place(x=30, y=25)
 
         self.save_button = ctk.CTkButton(master=self, corner_radius=15, text=None,

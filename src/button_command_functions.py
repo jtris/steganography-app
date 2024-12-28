@@ -14,6 +14,7 @@ def show_error_msg(message):
 
 def home_button_command(master_frame, controller):
     controller.show_frame('MenuFrame')
+    controller.reset_title()
     
     # delete inputs and error messages
     frame_name = master_frame.__class__.__name__
@@ -46,6 +47,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
             home_button_command(current_frame, controller)
             return
 
+        controller.append_to_title(os.path.basename(filepath))
         if controller.current_process == 'encode':
             img_path_frame_continue_e(controller)
         else:
@@ -60,6 +62,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
             encode_and_save(controller)
         else:
             save_decoded(controller)
+        controller.reset_title()
         controller.show_frame('MenuFrame')
 
     elif current_frame == 'EnterKeyFrame':
@@ -73,6 +76,7 @@ def _button_file_explorer_save_rsa_keys_command(controller):
     try:
         generate_and_save_rsa_keys(filepath)
         controller.show_frame('MenuFrame')
+        controller.reset_title()
 
     except PermissionError:
         show_error_msg("This program isn't allowed to work with this directory")
@@ -80,11 +84,13 @@ def _button_file_explorer_save_rsa_keys_command(controller):
 
 # MenuFrame button functions
 def button_encode_command(controller):
+    controller.title('encode')
     controller.current_process = 'encode'
     controller.show_frame('ImgPathFrame')
 
 
 def button_decode_command(controller):
+    controller.title('decode')
     controller.current_process = 'decode'
     controller.show_frame('ImgPathFrame')
 
@@ -116,6 +122,7 @@ def button_imgpath_continue_command(master_frame, controller):
     master_frame.error_label.place_forget()
 
     controller.original_image_path = entry_input
+    controller.append_to_title(os.path.basename(entry_input))
     if controller.current_process == 'encode':
         img_path_frame_continue_e(controller)
     else:
@@ -132,11 +139,14 @@ def img_path_frame_continue_d(controller):
 
 # DecodeSelectionFrame button functions
 def button_decode_selection_command(controller):
+    # update status
+    if controller.encoding_technique != 'rsa+aes+lsb':
+        controller.append_to_title(controller.encoding_technique)
 
     try:
         if controller.encoding_technique == 'appending':
             controller.decoded_data = decode_file_appending(controller.original_image_path)
-    
+     
         elif controller.encoding_technique == 'metadata':
             controller.decoded_data = decode_file_metadata(controller.original_image_path)
      
@@ -176,6 +186,7 @@ def button_decode_selection_aes_lsb_command(controller):
 
 
 def button_decode_selection_rsa_aes_lsb_command(controller):
+    controller.append_to_title('rsa+aes+lsb')
     controller.encoding_technique = 'rsa+aes+lsb'
     controller.show_frame('EnterKeyFrame')
 
@@ -238,21 +249,25 @@ def button_generate_rsa_keys_command(controller):
 
 # EncodeSelectionFrame button functions
 def button_encode_selection_command(controller, encoding_technique: str):
+    controller.append_to_title(encoding_technique)
     controller.encoding_technique = encoding_technique
     controller.show_frame('EncodeTextOrFileFrame')
 
 
 def button_encode_selection_rsa_aes_lsb_command(controller):
+    controller.append_to_title('rsa+aes+lsb')
     controller.encoding_technique = 'rsa+aes+lsb'
     controller.show_frame('EnterKeyFrame')
 
 
 # EncodeTextOrFileFrame button functions
 def button_hide_file_command(controller):
+    controller.append_to_title('hide file')
     controller.show_frame('HideFileFrame')
 
 
 def button_enter_message_command(controller):
+    controller.append_to_title('hide text')
     controller.show_frame('EnterMessageFrame')
 
 
@@ -264,6 +279,7 @@ def button_hidefile_file_explorer_command(controller, file_to_hide_path):
     except:
         show_error_msg('an error occured while trying to read a file')
 
+    controller.title(controller.title() + f' ({os.path.basename(file_to_hide_path)})')
     controller.show_frame('SaveFrame')
 
 
@@ -275,9 +291,13 @@ def button_hidefile_continue_command(master_frame, controller):
         master_frame.error_label.place(x=35, y=280)
         return
 
-    with open(entry_input, 'rb') as f:
-        controller.data_to_hide = f.read()
+    try:
+        with open(entry_input, 'rb') as f:
+            controller.data_to_hide = f.read()
+    except PermissionError:
+        master_frame.error_label.place(x=35, y=280)
 
+    controller.title(controller.title() + f' ({os.path.basename(entry_input)})')
     master_frame.error_label.place_forget()
     controller.show_frame('SaveFrame')
 
@@ -314,6 +334,7 @@ def button_saveframe_save_command(master_frame, controller):
         save_decoded(controller)
 
     controller.clear_data()
+    controller.reset_title()
     controller.show_frame('MenuFrame')
     
 
