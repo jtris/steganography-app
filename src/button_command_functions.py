@@ -12,20 +12,23 @@ def show_error_msg(message):
     messagebox.showerror('ERROR', message)
 
 
-def home_button_command(master_frame, controller):
+def home_button_command(controller, master_frame=None):
     controller.show_frame('MenuFrame')
     controller.reset_title()
+    controller.clear_data()
     
     # delete inputs and error messages
+    if master_frame is None:
+        return
+
     frame_name = master_frame.__class__.__name__
+    
     if frame_name in ['ImgPathFrame', 'HideFileFrame', 'SaveFrame']:
         master_frame.error_label.place_forget()
         master_frame.entry.delete(0, 'end')
     elif frame_name == 'EnterMessageFrame':
         master_frame.message_textbox.delete('0.0', 'end')
     
-    controller.clear_data()
-
 
 def button_file_explorer_command(master_frame, controller, current_frame):
     if current_frame == 'GenerateRSAKeysFrame':
@@ -44,7 +47,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
         
         if not _is_valid_filetype(filepath):
             show_error_msg('This file type is not supported')
-            home_button_command(current_frame, controller)
+            home_button_command(controller, current_frame)
             return
 
         controller.append_to_title(os.path.basename(filepath))
@@ -62,8 +65,7 @@ def button_file_explorer_command(master_frame, controller, current_frame):
             encode_and_save(controller)
         else:
             save_decoded(controller)
-        controller.reset_title()
-        controller.show_frame('MenuFrame')
+        home_button_command(controller, current_frame)
 
     elif current_frame == 'EnterKeyFrame':
         controller.key_path = filepath
@@ -75,8 +77,7 @@ def _button_file_explorer_save_rsa_keys_command(controller):
 
     try:
         generate_and_save_rsa_keys(filepath)
-        controller.show_frame('MenuFrame')
-        controller.reset_title()
+        home_button_command(controller)
 
     except PermissionError:
         show_error_msg("This program isn't allowed to work with this directory")
@@ -115,7 +116,7 @@ def button_imgpath_continue_command(master_frame, controller):
 
     if not _is_valid_filetype(entry_input):
         show_error_msg('This file type is not supported')
-        home_button_command(master_frame, controller)
+        home_button_command(controller, master_frame)
         return
 
     # hide the error label
@@ -244,6 +245,7 @@ def _button_auto_decode_continuation(controller):
 
 # GenerateRSAKeysFrame
 def button_generate_rsa_keys_command(controller):
+    controller.title('generate an RSA key pair')
     controller.show_frame('GenerateRSAKeysFrame')
 
 
@@ -345,20 +347,21 @@ def encode_and_save(controller):
     rsa_key_path = controller.key_path
 
     try:
-        if controller.encoding_technique == 'appending':
-            encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
-     
-        elif controller.encoding_technique == 'metadata':
-            encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
-     
-        elif controller.encoding_technique == 'lsb':
-            encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path)
-     
-        elif controller.encoding_technique == 'aes+lsb':
-            encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path)
-        
-        elif controller.encoding_technique == 'rsa+aes+lsb':
-            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path, save_path=save_path)
+       if controller.encoding_technique == 'appending':
+           encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
+
+       elif controller.encoding_technique == 'metadata':
+           encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
+
+       elif controller.encoding_technique == 'lsb':
+           encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
+
+       elif controller.encoding_technique == 'aes+lsb':
+           encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
+
+       elif controller.encoding_technique == 'rsa+aes+lsb':
+           encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path,\
+                   save_path=save_path, controller=controller)
     
     except:
        show_error_msg('an error occured while encoding or saving the file')

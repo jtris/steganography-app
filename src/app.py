@@ -426,7 +426,7 @@ class GenerateRSAKeysFrame(tkinter.Frame):
 # OTHER FNs
 def place_home_button(master, controller):
     home_button = ctk.CTkButton(master=master, corner_radius=15, text=None,
-        command=lambda:home_button_command(master, controller), image=controller.menu_icon, width=80, height=80)
+        command=lambda:home_button_command(controller, master), image=controller.menu_icon, width=80, height=80)
 
     home_button.place(x=690, y=25)
 

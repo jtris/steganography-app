@@ -2,6 +2,7 @@ from Crypto.Cipher import AES, PKCS1_v1_5
 from Crypto.Random import get_random_bytes
 from Crypto.PublicKey import RSA
 from PIL import Image
+from tkinter import messagebox
 import numpy as np
 import jpeglib
 import piexif
@@ -41,12 +42,19 @@ def encode_file_by_hiding_in_metadata(file_path: str, data: bytes, save_path: st
 
 
 ''' lsb matching '''
+def _handle_data_too_large_error(controller):
+    messagebox.showerror('ERROR', 'Data size is too large to use in conjuction with LSB encoding and this image.')
 
-def encode_file_by_lsb(file_path: str, data: bytes, save_path: str):
+    controller.show_frame('MenuFrame')
+    controller.reset_title()
+    controller.clear_data()
+
+
+def encode_file_by_lsb(file_path: str, data: bytes, save_path: str, controller):
     if save_path[-3:] == 'png':
-        encode_png_file_by_lsb(file_path, data, save_path)
+        encode_png_file_by_lsb(file_path, data, save_path, controller)
         return
-    encode_jpg_file_by_lsb(file_path, data, save_path)
+    encode_jpg_file_by_lsb(file_path, data, save_path, controller)
 
 
 def add_character_sequence_to_lsb_data(data: bytes) -> bytes:
@@ -55,7 +63,7 @@ def add_character_sequence_to_lsb_data(data: bytes) -> bytes:
     return data
 
 
-def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str):
+def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str, controller):
 
     img = jpeglib.read_dct(file_path)
     
@@ -70,15 +78,19 @@ def encode_jpg_file_by_lsb(file_path: str, data: bytes, save_path: str):
     coefficient = coefficient.flatten()
     coefficient_copy = coefficient.copy()
 
-    for i in range(len(data_bytes)):
-        if coefficient[i] % 2 != data_bytes[i]:
-            coefficient_copy[i] = coefficient[i] + random.choice([-1, +1])
+    try:
+        for i in range(len(data_bytes)):
+           if coefficient[i] % 2 != data_bytes[i]:
+               coefficient_copy[i] = coefficient[i] + random.choice([-1, +1])
+    except IndexError:
+        _handle_data_too_large_error(controller)
+        return
 
     img.Y[::8, ::8] = coefficient_copy.reshape(original_shape)
     img.write_dct(save_path)
 
 
-def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
+def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str, controller):
     
     data = add_character_sequence_to_lsb_data(data)
 
@@ -100,12 +112,16 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
     image_numpy_array = np.reshape(image_numpy_array, image_width*image_height*image_bit_depth//8)
 
     # encode data
-    for x in range(len(data_bytes)):
-        binary_value = "{:08b}".format(image_numpy_array[x])
-
-        # change the least significant bit (using lsb matching)
-        if (binary_value[-1] != data_bytes[x]):
-            image_numpy_array[x] = int(binary_value, 2) + random.choice([+1, -1])
+    try:
+        for x in range(len(data_bytes)):
+            binary_value = "{:08b}".format(image_numpy_array[x])
+     
+            # change the least significant bit (using lsb matching)
+            if (binary_value[-1] != data_bytes[x]):
+                image_numpy_array[x] = int(binary_value, 2) + random.choice([+1, -1])
+    except IndexError:
+        _handle_data_too_large_error(controller)
+        return
 
     # resize to original dimensions
     image_numpy_array = np.reshape(image_numpy_array, (image_height, image_width, image_bit_depth//8))
@@ -115,7 +131,7 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str):
 
 ''' aes + lsb matching '''
 
-def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str):
+def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str, controller):
     key = get_random_bytes(16)
     aes_cipher = AES.new(key, AES.MODE_EAX)
 
@@ -141,7 +157,7 @@ def _get_save_path_directory(save_path):
     return save_path[:last_slash+1]
 
 
-def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, rsa_key_path: str, save_path: str):
+def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, rsa_key_path: str, save_path: str, controller):
     # encrypt data with AES
     aes_key = get_random_bytes(16)
     aes_cipher = AES.new(aes_key, AES.MODE_EAX)
