@@ -156,7 +156,7 @@ class ImgPathFrame(tkinter.Frame):
 
         self.button_continue = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_imgpath_continue_command(self, controller),
-            text='continue', font=MEDIUM_FONT, width=450, height=80)
+            text='continue', font=MEDIUM_FONT, width=350, height=80)
         self.button_continue.place(x=30, y=390)
 
 
@@ -286,7 +286,7 @@ class HideFileFrame(tkinter.Frame):
 
         self.button_continue = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_hidefile_continue_command(self, controller),
-            text='continue', font=MEDIUM_FONT, width=450, height=80)
+            text='continue', font=MEDIUM_FONT, width=350, height=80)
         self.button_continue.place(x=30, y=390)
 
 
@@ -332,7 +332,7 @@ class SaveFrame(tkinter.Frame):
 
         self.button_save = ctk.CTkButton(master=self, corner_radius=15,
             command=lambda:button_saveframe_save_command(self, controller),
-            text='save', font=MEDIUM_FONT, width=450, height=80)
+            text='save', font=MEDIUM_FONT, width=350, height=80)
         self.button_save.place(x=30, y=390)
 
 
@@ -392,7 +392,8 @@ class EnterKeyFrame(tkinter.Frame):
         place_file_explorer_button(master=self, controller=controller, current_frame='EnterKeyFrame')
 
         self.button_save = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_enterkeyframe_continue_command(self, controller), text='continue', font=MEDIUM_FONT, width=450, height=80)
+            command=lambda:button_enterkeyframe_continue_command(self, controller),
+            text='continue', font=MEDIUM_FONT, width=350, height=80)
         self.button_save.place(x=30, y=390)
 
 
@@ -418,8 +419,8 @@ class GenerateRSAKeysFrame(tkinter.Frame):
         place_file_explorer_button(master=self, controller=controller, current_frame='GenerateRSAKeysFrame')
 
         self.button_save = ctk.CTkButton(master=self, corner_radius=15,
-            command=None,
-            text='continue', font=MEDIUM_FONT, width=450, height=80)
+            command=lambda:button_generate_rsa_keys_continue_command(self, controller),
+            text='continue', font=MEDIUM_FONT, width=350, height=80)
         self.button_save.place(x=30, y=390)
 
 

@@ -83,6 +83,22 @@ def _button_file_explorer_save_rsa_keys_command(controller):
         show_error_msg("This program isn't allowed to work with this directory")
         
 
+def button_generate_rsa_keys_continue_command(master_frame, controller):
+    entry_input = master_frame.entry.get().strip()
+    master_frame.entry.delete(0, 'end')
+
+    if not os.path.isdir(entry_input):
+        master_frame.error_label.place(x=35, y=280)
+        return
+
+    try:
+        generate_and_save_rsa_keys(entry_input)
+        home_button_command(controller)
+
+    except PermissionError:
+        show_error_msg("This program isn't allowed to work with this directory")
+
+
 # MenuFrame button functions
 def button_encode_command(controller):
     controller.title('encode')
@@ -407,3 +423,4 @@ def button_enterkeyframe_continue_command(master_frame, controller):
     
     else:
         controller.show_frame('EncodeTextOrFileFrame')
+
