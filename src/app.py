@@ -52,7 +52,7 @@ class Root(ctk.CTk):
         self.file_explorer_icon = ctk.CTkImage(light_image=Image.open('assets/file_explorer_icon.png'), size=(60, 50))
         self.save_icon = ctk.CTkImage(light_image=Image.open('assets/save_icon.png'), size=(40, 40))
 
-        _frames = [MenuFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
+        _frames = [MenuFrame, OtherOptionsFrame, AboutFrame, ImgPathFrame, EncodeTextOrFileFrame,
                     HideFileFrame, EnterMessageFrame, SaveFrame, PrintoutFrame,
                     EncodeSelectionFrame, DecodeSelectionFrame, EnterKeyFrame,
                     AutoDecodingPrintoutFrame, GenerateRSAKeysFrame]
@@ -105,10 +105,30 @@ class MenuFrame(tkinter.Frame):
             width=400, height=100)
         self.button_decode.place(x=W_WIDTH/2, y=W_HEIGHT/2+90, anchor=tkinter.CENTER)
 
-        self.button_about = ctk.CTkButton(master=self, corner_radius=15,
-            command=lambda:button_about_command(controller), text='about', font=('Fixedsys', 35),
+        self.button_other = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_other_command(controller), text='other', font=('Fixedsys', 35),
             width=200, height=50)
-        self.button_about.place(x=W_WIDTH/2, y=W_HEIGHT/2+190, anchor=tkinter.CENTER)
+        self.button_other.place(x=W_WIDTH/2, y=W_HEIGHT/2+190, anchor=tkinter.CENTER)
+
+
+class OtherOptionsFrame(tkinter.Frame):
+    def __init__(self, parent, controller):
+        tkinter.Frame.__init__(self, parent)
+
+        self.title = ctk.CTkLabel(self, text='other options:', font=MEDIUM_FONT)
+        self.title.place(x=30, y=35)
+
+        self.button_about = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_about_command(controller),
+            text='about this app', font=MEDIUM_FONT, width=580, height=125)
+        self.button_about.place(x=W_WIDTH/2, y=210, anchor=tkinter.CENTER)
+
+        self.button_generate_rsa_keys = ctk.CTkButton(master=self, corner_radius=15,
+            command=lambda:button_generate_rsa_keys_command(controller),
+            text='generate RSA keys', font=MEDIUM_FONT, width=580, height=125)
+        self.button_generate_rsa_keys.place(x=W_WIDTH/2, y=340, anchor=tkinter.CENTER)
+
+        place_home_button(master=self, controller=controller)
 
 
 class AboutFrame(tkinter.Frame):

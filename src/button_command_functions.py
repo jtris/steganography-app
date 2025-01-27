@@ -112,6 +112,10 @@ def button_decode_command(controller):
     controller.show_frame('ImgPathFrame')
 
 
+def button_other_command(controller):
+    controller.show_frame('OtherOptionsFrame')
+
+
 def button_about_command(controller):
     controller.show_frame('AboutFrame')
 
