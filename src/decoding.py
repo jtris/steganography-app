@@ -224,3 +224,4 @@ def decode_file_rsa_aes_lsb(image_path: str, key_path: str):
     hidden_data = _decode_aes(ciphertext=aes_encrypted_data, key=aes_key, nonce=aes_nonce, tag=aes_tag)
     hidden_data = hidden_data.decode('utf-8') # convert from bytes to str
     return hidden_data
+

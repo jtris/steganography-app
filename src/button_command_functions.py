@@ -182,6 +182,8 @@ def button_decode_selection_command(controller):
 
     except:
         show_error_msg('an error occured while decoding the file')
+        home_button_command(controller)
+        return
 
     _button_decode_selection_continuation(controller)
 
@@ -367,24 +369,24 @@ def encode_and_save(controller):
     rsa_key_path = controller.key_path
 
     try:
-       if controller.encoding_technique == 'appending':
-           encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
+        if controller.encoding_technique == 'appending':
+            encode_file_by_appending(file_path=original_image_path, data=data, save_path=save_path)
 
-       elif controller.encoding_technique == 'metadata':
-           encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
+        elif controller.encoding_technique == 'metadata':
+            encode_file_by_hiding_in_metadata(file_path=original_image_path, data=data, save_path=save_path)
 
-       elif controller.encoding_technique == 'lsb':
-           encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
+        elif controller.encoding_technique == 'lsb':
+            encode_file_by_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
 
-       elif controller.encoding_technique == 'aes+lsb':
-           encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
+        elif controller.encoding_technique == 'aes+lsb':
+            encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
 
-       elif controller.encoding_technique == 'rsa+aes+lsb':
-           encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path,\
-                   save_path=save_path, controller=controller)
-    
+        elif controller.encoding_technique == 'rsa+aes+lsb':
+            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path,\
+                    save_path=save_path, controller=controller)
+
     except:
-       show_error_msg('an error occured while encoding or saving the file')
+        show_error_msg('an error occured while encoding or saving the file')
 
 
 def save_decoded(controller):

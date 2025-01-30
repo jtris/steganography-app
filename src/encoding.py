@@ -132,7 +132,7 @@ def encode_png_file_by_lsb(file_path: str, data: bytes, save_path: str, controll
 ''' aes + lsb matching '''
 
 def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str, controller):
-    key = get_random_bytes(16)
+    key = get_random_bytes(32)
     aes_cipher = AES.new(key, AES.MODE_EAX)
 
     encrypted_data, tag = aes_cipher.encrypt_and_digest(data)
@@ -142,7 +142,7 @@ def encode_file_by_aes_lsb(file_path: str, data: bytes, save_path: str, controll
     payload = ''.join(["{:08b}".format(x) for x in payload])
 
     transformed_data = bytes(payload, encoding='utf-8')
-    encode_file_by_lsb(file_path, transformed_data, save_path)
+    encode_file_by_lsb(file_path, transformed_data, save_path, controller)
 
     # export aes key
     key_save_path = os.path.dirname(save_path) + '/aes_key.pem'
@@ -175,11 +175,11 @@ def encode_file_by_rsa_aes_lsb(file_path: str, data: bytes, rsa_key_path: str, s
     # encode with lsb
     lsb_payload = rsa_ciphertext + aes_encrypted_data
     lsb_payload = bytes(''.join(["{:08b}".format(x) for x in lsb_payload]), encoding='utf-8')
-    encode_file_by_lsb(file_path, lsb_payload, save_path)
+    encode_file_by_lsb(file_path, lsb_payload, save_path, controller)
 
 
 def generate_and_save_rsa_keys(save_path: str):
-    private_rsa_key = RSA.generate(1024)
+    private_rsa_key = RSA.generate(2048)
     public_rsa_key = private_rsa_key.public_key()
 
     with open(save_path + '/private_rsa_key.pem', 'wb') as f:
