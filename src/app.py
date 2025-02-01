@@ -325,7 +325,7 @@ class EnterMessageFrame(tkinter.Frame):
 
         self.save_button = ctk.CTkButton(self, corner_radius=15,
             command=lambda:button_entermessageframe_save_command(self, controller), text='save',
-            font=MEDIUM_FONT, width=200, height=80)
+            font=MEDIUM_FONT, width=350, height=80)
         self.save_button.place(x=30, y=390)
 
 

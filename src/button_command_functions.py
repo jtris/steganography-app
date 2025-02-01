@@ -228,8 +228,20 @@ def button_auto_decode(controller):
 
     AutoDecodingPrintoutFrame = controller.frames['AutoDecodingPrintoutFrame']
     default_title = AutoDecodingPrintoutFrame.title_text
-    AutoDecodingPrintoutFrame.title.configure(text=default_title+controller.encoding_technique)
+    encoding_technique = controller.encoding_technique.upper()
+    new_title_text = default_title + encoding_technique
+
+    if _button_auto_decode_possible_rsa_aes(controller):
+        new_title_text = default_title + encoding_technique + ', possibly RSA/AES'
+
+    AutoDecodingPrintoutFrame.title.configure(text=new_title_text)
     _button_auto_decode_continuation(controller)
+
+
+def _button_auto_decode_possible_rsa_aes(controller):
+    if set(controller.decoded_data) == {'0', '1'}:
+        return True
+    return False
 
 
 def _button_auto_decode_detect_data(controller) -> bool: # True=data found, False=not found
