@@ -1,2 +1,6 @@
-customtkinter==5.2.0
-Pillow==8.2.0
+customtkinter==5.2.1
+jpeglib==1.0.0
+numpy==2.2.2
+piexif==1.1.3
+Pillow==11.1.0
+pycryptodome==3.20.0
