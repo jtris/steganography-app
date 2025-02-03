@@ -26,6 +26,7 @@ def decode_file_appending(image_path: str):
 
     text_start_index = contents.index(EOF_BYTES) + CONTENT_OFFSET
     data = contents[text_start_index:-1]
+    data = data.replace(b'\x00', b'') # avoid terminating data prematurely
     return data.decode('utf-8')
 
 

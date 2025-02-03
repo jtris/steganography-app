@@ -394,7 +394,7 @@ def encode_and_save(controller):
             encode_file_by_aes_lsb(file_path=original_image_path, data=data, save_path=save_path, controller=controller)
 
         elif controller.encoding_technique == 'rsa+aes+lsb':
-            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path,\
+            encode_file_by_rsa_aes_lsb(file_path=original_image_path, data=data, rsa_key_path=rsa_key_path,
                     save_path=save_path, controller=controller)
 
     except:
