@@ -43,7 +43,7 @@ $ echo "this is a secret message" >> image.jpg
 - Helpful for understanding and navigating the code
 
 <img src="https://github.com/jtris/steganography-app/blob/main/screenshots/flowchart.png" alt="flowchart" width="700"/>
-
+* an updated one will come soon, this flow chart corresponds to v1.0.0 of this program
 
 ## how to run
 - I assume that python is already installed on your device
