@@ -1,6 +1,7 @@
 # Steganography Desktop App
 
-
+- An easy to use app for image steganography.
+- Supports both **png** and **jpg** file formats.
 
 ## supported steganography techniques
 
